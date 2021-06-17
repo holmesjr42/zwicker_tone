@@ -1,0 +1,5 @@
+Building DAG of jobs...
+MissingInputException in line 13 of /home/bhc/codes/spike_snakemake/nnm_spike_lfp/Snakefile:
+Missing input files for rule spk_lfp_session_average:
+/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr29_190228__tsp.hdf5
+/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr29_190228__lfp_fil.hdf5

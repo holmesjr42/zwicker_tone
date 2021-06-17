@@ -1,0 +1,124 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 3
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	5	nnm_1_1_sp_lfp
+	4	nnm_3_0_05_sp_lfp
+	3	nnm_3_0_sp_lfp
+	4	nnm_3_1_sp_lfp
+	3	nnm_hef_sp_lfp
+	4	nnm_lef_sp_lfp
+	3	nnm_wn_1_1_sp_lfp
+	3	nnm_wn_3_1_sp_lfp
+	30
+
+[Thu Jul 30 01:02:17 2020]
+rule nnm_lef_sp_lfp:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/cr35_190403_spk_lfp_avg_nnm.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr35_190403_nnm_lef_spk.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/cr35_190403_nnm_lef_lfp.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/cr35_190403_nnm_lef_fps.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/cr35_190403_nnm_lef_fpl.png
+    jobid: 44
+    wildcards: name=cr35_190403
+
+[Thu Jul 30 01:02:17 2020]
+rule nnm_3_0_05_sp_lfp:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/cr35_190403_spk_lfp_avg_nnm.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr35_190403_nnm_3_0_05_spk.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/cr35_190403_nnm_3_0_05_lfp.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/cr35_190403_nnm_3_0_05_fps.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/cr35_190403_nnm_3_0_05_fpl.png
+    jobid: 42
+    wildcards: name=cr35_190403
+
+[Thu Jul 30 01:02:17 2020]
+rule nnm_1_1_sp_lfp:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/cr79_200211_spk_lfp_avg_nnm.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr79_200211_nnm_1_1_spk.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/cr79_200211_nnm_1_1_lfp.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/cr79_200211_nnm_1_1_fps.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/cr79_200211_nnm_1_1_fpl.png
+    jobid: 62
+    wildcards: name=cr79_200211
+
+[Thu Jul 30 01:02:39 2020]
+Finished job 42.
+1 of 30 steps (3%) done
+
+[Thu Jul 30 01:02:39 2020]
+rule nnm_3_1_sp_lfp:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/cr35_190403_spk_lfp_avg_nnm.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr35_190403_nnm_3_1_spk.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/cr35_190403_nnm_3_1_lfp.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/cr35_190403_nnm_3_1_fps.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/cr35_190403_nnm_3_1_fpl.png
+    jobid: 45
+    wildcards: name=cr35_190403
+
+[Thu Jul 30 01:02:39 2020]
+Finished job 44.
+2 of 30 steps (7%) done
+
+[Thu Jul 30 01:02:39 2020]
+rule nnm_1_1_sp_lfp:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/cr35_190403_spk_lfp_avg_nnm.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr35_190403_nnm_1_1_spk.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/cr35_190403_nnm_1_1_lfp.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/cr35_190403_nnm_1_1_fps.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/cr35_190403_nnm_1_1_fpl.png
+    jobid: 46
+    wildcards: name=cr35_190403
+
+[Thu Jul 30 01:02:46 2020]
+Finished job 62.
+3 of 30 steps (10%) done
+
+[Thu Jul 30 01:02:46 2020]
+rule nnm_lef_sp_lfp:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/cr29_190228_spk_lfp_avg_nnm.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr29_190228_nnm_lef_spk.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/cr29_190228_nnm_lef_lfp.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/cr29_190228_nnm_lef_fps.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/cr29_190228_nnm_lef_fpl.png
+    jobid: 12
+    wildcards: name=cr29_190228
+
+[Thu Jul 30 01:03:09 2020]
+Finished job 45.
+4 of 30 steps (13%) done
+
+[Thu Jul 30 01:03:09 2020]
+rule nnm_3_0_sp_lfp:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/cr29_190228_spk_lfp_avg_nnm.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr29_190228_nnm_3_0_spk.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/cr29_190228_nnm_3_0_lfp.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/cr29_190228_nnm_3_0_fps.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/cr29_190228_nnm_3_0_fpl.png
+    jobid: 9
+    wildcards: name=cr29_190228
+
+[Thu Jul 30 01:03:09 2020]
+Finished job 46.
+5 of 30 steps (17%) done
+
+[Thu Jul 30 01:03:09 2020]
+rule nnm_wn_1_1_sp_lfp:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/cr29_190228_spk_lfp_avg_nnm.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr29_190228_nnm_wn_1_1_spk.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/cr29_190228_nnm_wn_1_1_lfp.png
+    jobid: 16
+    wildcards: name=cr29_190228
+
+[Thu Jul 30 01:03:09 2020]
+Finished job 12.
+6 of 30 steps (20%) done
+
+[Thu Jul 30 01:03:09 2020]
+rule nnm_wn_3_1_sp_lfp:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/cr29_190228_spk_lfp_avg_nnm.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr29_190228_nnm_wn_3_1_spk.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/cr29_190228_nnm_wn_3_1_lfp.png
+    jobid: 15
+    wildcards: name=cr29_190228
+
+Waiting at most 5 seconds for missing files.
+MissingOutputException in line 124 of /home/bhc/codes/spike_snakemake/nnm_spike_lfp/Snakefile:
+Job completed successfully, but some output files are missing. Missing files after 5 seconds:
+/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/cr29_190228_nnm_wn_1_1_lfp.png
+This might be due to filesystem latency. If that is the case, consider to increase the wait time with --latency-wait.
+Removing output files of failed job nnm_wn_1_1_sp_lfp since they might be corrupted:
+/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr29_190228_nnm_wn_1_1_spk.png
+Waiting at most 5 seconds for missing files.
+MissingOutputException in line 113 of /home/bhc/codes/spike_snakemake/nnm_spike_lfp/Snakefile:
+Job completed successfully, but some output files are missing. Missing files after 5 seconds:
+/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/cr29_190228_nnm_wn_3_1_lfp.png
+This might be due to filesystem latency. If that is the case, consider to increase the wait time with --latency-wait.
+Removing output files of failed job nnm_wn_3_1_sp_lfp since they might be corrupted:
+/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr29_190228_nnm_wn_3_1_spk.png
+[Thu Jul 30 01:03:25 2020]
+Finished job 9.
+7 of 30 steps (23%) done
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /home/bhc/codes/spike_snakemake/nnm_spike_lfp/.snakemake/log/2020-07-30T010217.540537.snakemake.log

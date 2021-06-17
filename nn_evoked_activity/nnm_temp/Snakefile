@@ -1,0 +1,153 @@
+# I'm going to remove 'cr35_190403' because it's not a good data
+
+NAMES = ['cr29_190228', 'cr30_190305', 'cr31_190312', 'cr33_190321', 'cr50_190724', 'cr79_200211', 'cr90_201023', 'cr92_201029', 'cr93_201110', 'cr94_201112', 'cr95_201117']
+NAMES2 = ['cr29_190228', 'cr30_190305', 'cr31_190312', 'cr33_190321', 'cr50_190724', 'cr79_200211', 'cr90_201023', 'cr94_201112', 'cr95_201117', 'all']
+COND = ['nnm_3_0', 'nnm_3_1_off', 'nnm_1_1_off', 'nnm_3_1_on', 'nnm_1_1_on']
+
+# COND = ['nnm_3_0', 'nnm_3_0_05', 'nnm_hef', 'nnm_lef', 'nnm_3_1', 'nnm_1_1', 'nnm_wn_3_1', 'nnm_wn_1_1']
+# COND2 = ['nnm_3_0', 'nnm_3_0_05', 'nnm_hef', 'nnm_lef', 'nnm_3_1', 'nnm_1_1']
+
+rule all:
+    input:
+        expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/{name}_spk_lfp_avg_nnm.hdf5", name=NAMES),
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/all_spk_lfp_avg_nnm.hdf5",
+        expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/{cond}/{name}_{cond}_spk.png", name=NAMES2, cond=COND),
+        expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/{cond}/{name}_{cond}_lfp.png", name=NAMES2, cond=COND),
+        expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/{cond}/{name}_{cond}_fps.png", name=NAMES2, cond=COND),
+        expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/{cond}/{name}_{cond}_fpl.png", name=NAMES2, cond=COND),
+        expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/dfs/{cond}/{name}_{cond}_dfs.png", name=NAMES2, cond=COND)
+        # expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/dfl/{cond}/{name}_{cond}_dfl.png", name=NAMES2, cond=COND)
+
+rule spk_lfp_session_average:
+    input:
+        lfp = "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/{name}_lfp_fil.hdf5",
+        tsp = "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/{name}_tsp.hdf5"
+    output:
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/{name}_spk_lfp_avg_nnm.hdf5"
+    
+    script:
+        "/home/bhc/codes/spike_snakemake/nnm_spike_lfp/spk_lfp_session_average.py"
+
+rule spk_lfp_average:
+    input:
+        expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/{name}_spk_lfp_avg_nnm.hdf5", name=NAMES)
+
+    output:
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/all_spk_lfp_avg_nnm.hdf5"
+    
+    script:
+        "/home/bhc/codes/spike_snakemake/nnm_spike_lfp/spk_lfp_average.py"
+
+rule nnm_3_0_sp_lfp:
+    input:
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/{name}_spk_lfp_avg_nnm.hdf5"
+    
+    output:
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/nnm_3_0/{name}_nnm_3_0_spk.png",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/nnm_3_0/{name}_nnm_3_0_lfp.png",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/nnm_3_0/{name}_nnm_3_0_fps.png",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/nnm_3_0/{name}_nnm_3_0_fpl.png",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/dfs/nnm_3_0/{name}_nnm_3_0_dfs.png",
+        # "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/dfl/nnm_3_0/{name}_nnm_3_0_dfl.png"
+    
+    script:
+        "/home/bhc/codes/spike_snakemake/nnm_spike_lfp/nnm_3_0_sp_lfp.py"
+
+# rule nnm_3_0_05_sp_lfp:
+#     input:
+#         "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/{name}_spk_lfp_avg_nnm.hdf5"
+    
+#     output:
+#         "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/nnm_3_0_05/{name}_nnm_3_0_05_spk.png",
+#         "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/nnm_3_0_05/{name}_nnm_3_0_05_lfp.png",
+#         "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/nnm_3_0_05/{name}_nnm_3_0_05_fps.png",
+#         "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/nnm_3_0_05/{name}_nnm_3_0_05_fpl.png"
+    
+#     script:
+#         "/home/bhc/codes/spike_snakemake/nnm_spike_lfp/nnm_3_0_05_sp_lfp.py"
+
+# rule nnm_hef_sp_lfp:
+#     input:
+#         "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/{name}_spk_lfp_avg_nnm.hdf5"
+    
+#     output:
+#         "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/nnm_hef/{name}_nnm_hef_spk.png",
+#         "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/nnm_hef/{name}_nnm_hef_lfp.png",
+#         "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/nnm_hef/{name}_nnm_hef_fps.png",
+#         "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/nnm_hef/{name}_nnm_hef_fpl.png"
+    
+#     script:
+#         "/home/bhc/codes/spike_snakemake/nnm_spike_lfp/nnm_hef_sp_lfp.py"
+
+# rule nnm_lef_sp_lfp:
+#     input:
+#         "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/{name}_spk_lfp_avg_nnm.hdf5"
+    
+#     output:
+#         "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/nnm_lef/{name}_nnm_lef_spk.png",
+#         "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/nnm_lef/{name}_nnm_lef_lfp.png",
+#         "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/nnm_lef/{name}_nnm_lef_fps.png",
+#         "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/nnm_lef/{name}_nnm_lef_fpl.png"
+    
+#     script:
+#         "/home/bhc/codes/spike_snakemake/nnm_spike_lfp/nnm_lef_sp_lfp.py"
+
+rule nnm_3_1_off_sp_lfp:
+    input:
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/{name}_spk_lfp_avg_nnm.hdf5"
+    
+    output:
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/nnm_3_1_off/{name}_nnm_3_1_off_spk.png",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/nnm_3_1_off/{name}_nnm_3_1_off_lfp.png",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/nnm_3_1_off/{name}_nnm_3_1_off_fps.png",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/nnm_3_1_off/{name}_nnm_3_1_off_fpl.png",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/dfs/nnm_3_1_off/{name}_nnm_3_1_off_dfs.png",
+        # "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/dfl/nnm_3_1_off/{name}_nnm_3_1_off_dfl.png"
+    
+    script:
+        "/home/bhc/codes/spike_snakemake/nnm_spike_lfp/nnm_3_1_off_sp_lfp.py"
+
+rule nnm_3_1_on_sp_lfp:
+    input:
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/{name}_spk_lfp_avg_nnm.hdf5"
+    
+    output:
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/nnm_3_1_on/{name}_nnm_3_1_on_spk.png",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/nnm_3_1_on/{name}_nnm_3_1_on_lfp.png",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/nnm_3_1_on/{name}_nnm_3_1_on_fps.png",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/nnm_3_1_on/{name}_nnm_3_1_on_fpl.png",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/dfs/nnm_3_1_on/{name}_nnm_3_1_on_dfs.png",
+        # "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/dfl/nnm_3_1_on/{name}_nnm_3_1_on_dfl.png"
+    
+    script:
+        "/home/bhc/codes/spike_snakemake/nnm_spike_lfp/nnm_3_1_on_sp_lfp.py"
+
+rule nnm_1_1_off_sp_lfp:
+    input:
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/{name}_spk_lfp_avg_nnm.hdf5"
+    
+    output:
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/nnm_1_1_off/{name}_nnm_1_1_off_spk.png",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/nnm_1_1_off/{name}_nnm_1_1_off_lfp.png",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/nnm_1_1_off/{name}_nnm_1_1_off_fps.png",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/nnm_1_1_off/{name}_nnm_1_1_off_fpl.png",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/dfs/nnm_1_1_off/{name}_nnm_1_1_off_dfs.png",
+        # "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/dfl/nnm_1_1_off/{name}_nnm_1_1_off_dfl.png"
+    
+    script:
+        "/home/bhc/codes/spike_snakemake/nnm_spike_lfp/nnm_1_1_off_sp_lfp.py"
+
+rule nnm_1_1_on_sp_lfp:
+    input:
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/{name}_spk_lfp_avg_nnm.hdf5"
+    
+    output:
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/nnm_1_1_on/{name}_nnm_1_1_on_spk.png",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/nnm_1_1_on/{name}_nnm_1_1_on_lfp.png",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/nnm_1_1_on/{name}_nnm_1_1_on_fps.png",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/nnm_1_1_on/{name}_nnm_1_1_on_fpl.png",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/dfs/nnm_1_1_on/{name}_nnm_1_1_on_dfs.png",
+        # "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/dfl/nnm_1_1_on/{name}_nnm_1_1_on_dfl.png"
+    
+    script:
+        "/home/bhc/codes/spike_snakemake/nnm_spike_lfp/nnm_1_1_on_sp_lfp.py"

@@ -1,0 +1,36 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	7	spk_lfp_session_average
+	8
+
+[Fri Jul 24 01:27:46 2020]
+rule spk_lfp_session_average:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr50_190724_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr50_190724_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_tsp_avg/cr50_190724_tsp_avg_nnm.hkl
+    jobid: 6
+    wildcards: animal=cr50_190724
+
+[Fri Jul 24 01:27:46 2020]
+Error in rule spk_lfp_session_average:
+    jobid: 6
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_tsp_avg/cr50_190724_tsp_avg_nnm.hkl
+
+RuleException:
+URLError in line 15 of /home/bhc/codes/spike_snakemake/nnm_spike_lfp/Snakefile:
+<urlopen error [Errno 2] No such file or directory: '/home/bhc/codes/spike_snakemake/nnm_spike_lfp/spk_lfp__average.py'>
+  File "/home/bhc/codes/spike_snakemake/nnm_spike_lfp/Snakefile", line 15, in __rule_spk_lfp_session_average
+  File "/home/bhc/anaconda3/lib/python3.7/urllib/request.py", line 222, in urlopen
+  File "/home/bhc/anaconda3/lib/python3.7/urllib/request.py", line 525, in open
+  File "/home/bhc/anaconda3/lib/python3.7/urllib/request.py", line 543, in _open
+  File "/home/bhc/anaconda3/lib/python3.7/urllib/request.py", line 503, in _call_chain
+  File "/home/bhc/anaconda3/lib/python3.7/urllib/request.py", line 1484, in file_open
+  File "/home/bhc/anaconda3/lib/python3.7/urllib/request.py", line 1523, in open_local_file
+  File "/home/bhc/anaconda3/lib/python3.7/concurrent/futures/thread.py", line 57, in run
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /home/bhc/codes/spike_snakemake/nnm_spike_lfp/.snakemake/log/2020-07-24T012746.151872.snakemake.log

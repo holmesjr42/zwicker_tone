@@ -1,0 +1,95 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 4
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	8	nnm_1_1_sp_lfp
+	6	nnm_3_0_05_sp_lfp
+	8	nnm_3_0_sp_lfp
+	8	nnm_3_1_sp_lfp
+	8	nnm_hef_sp_lfp
+	8	nnm_lef_sp_lfp
+	8	nnm_wn_1_1_sp_lfp
+	8	nnm_wn_3_1_sp_lfp
+	63
+
+[Thu Jul 30 05:02:41 2020]
+rule nnm_1_1_sp_lfp:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/cr50_190724_spk_lfp_avg_nnm.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr50_190724_nnm_1_1_spk.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/cr50_190724_nnm_1_1_lfp.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/cr50_190724_nnm_1_1_fps.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/cr50_190724_nnm_1_1_fpl.png
+    jobid: 54
+    wildcards: name=cr50_190724
+
+[Thu Jul 30 05:02:41 2020]
+rule nnm_hef_sp_lfp:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/cr33_190321_spk_lfp_avg_nnm.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr33_190321_nnm_hef_spk.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/cr33_190321_nnm_hef_lfp.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/cr33_190321_nnm_hef_fps.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/cr33_190321_nnm_hef_fpl.png
+    jobid: 35
+    wildcards: name=cr33_190321
+
+[Thu Jul 30 05:02:41 2020]
+rule nnm_lef_sp_lfp:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/cr50_190724_spk_lfp_avg_nnm.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr50_190724_nnm_lef_spk.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/cr50_190724_nnm_lef_lfp.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/cr50_190724_nnm_lef_fps.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/cr50_190724_nnm_lef_fpl.png
+    jobid: 52
+    wildcards: name=cr50_190724
+
+[Thu Jul 30 05:02:41 2020]
+rule nnm_3_1_sp_lfp:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/cr50_190724_spk_lfp_avg_nnm.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr50_190724_nnm_3_1_spk.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/cr50_190724_nnm_3_1_lfp.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/cr50_190724_nnm_3_1_fps.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/cr50_190724_nnm_3_1_fpl.png
+    jobid: 53
+    wildcards: name=cr50_190724
+
+Terminating processes on user request, this might take some time.
+[Thu Jul 30 05:02:51 2020]
+Error in rule nnm_3_1_sp_lfp:
+    jobid: 53
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr50_190724_nnm_3_1_spk.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/cr50_190724_nnm_3_1_lfp.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/cr50_190724_nnm_3_1_fps.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/cr50_190724_nnm_3_1_fpl.png
+
+RuleException:
+CalledProcessError in line 98 of /home/bhc/codes/spike_snakemake/nnm_spike_lfp/Snakefile:
+Command 'set -euo pipefail;  /home/bhc/anaconda3/bin/python3.7 /home/bhc/codes/spike_snakemake/nnm_spike_lfp/.snakemake/scripts/tmp6x7t12si.nnm_3_1_sp_lfp.py' returned non-zero exit status 1.
+  File "/home/bhc/codes/spike_snakemake/nnm_spike_lfp/Snakefile", line 98, in __rule_nnm_3_1_sp_lfp
+  File "/home/bhc/anaconda3/lib/python3.7/concurrent/futures/thread.py", line 57, in run
+Removing output files of failed job nnm_3_1_sp_lfp since they might be corrupted:
+/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr50_190724_nnm_3_1_spk.png
+[Thu Jul 30 05:02:51 2020]
+Error in rule nnm_1_1_sp_lfp:
+    jobid: 54
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr50_190724_nnm_1_1_spk.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/cr50_190724_nnm_1_1_lfp.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/cr50_190724_nnm_1_1_fps.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/cr50_190724_nnm_1_1_fpl.png
+
+RuleException:
+CalledProcessError in line 111 of /home/bhc/codes/spike_snakemake/nnm_spike_lfp/Snakefile:
+Command 'set -euo pipefail;  /home/bhc/anaconda3/bin/python3.7 /home/bhc/codes/spike_snakemake/nnm_spike_lfp/.snakemake/scripts/tmp242ur0fk.nnm_1_1_sp_lfp.py' returned non-zero exit status 1.
+  File "/home/bhc/codes/spike_snakemake/nnm_spike_lfp/Snakefile", line 111, in __rule_nnm_1_1_sp_lfp
+  File "/home/bhc/anaconda3/lib/python3.7/concurrent/futures/thread.py", line 57, in run
+Removing output files of failed job nnm_1_1_sp_lfp since they might be corrupted:
+/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr50_190724_nnm_1_1_spk.png
+[Thu Jul 30 05:02:51 2020]
+Error in rule nnm_hef_sp_lfp:
+    jobid: 35
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr33_190321_nnm_hef_spk.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/cr33_190321_nnm_hef_lfp.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/cr33_190321_nnm_hef_fps.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/cr33_190321_nnm_hef_fpl.png
+
+RuleException:
+CalledProcessError in line 72 of /home/bhc/codes/spike_snakemake/nnm_spike_lfp/Snakefile:
+Command 'set -euo pipefail;  /home/bhc/anaconda3/bin/python3.7 /home/bhc/codes/spike_snakemake/nnm_spike_lfp/.snakemake/scripts/tmpdc2musez.nnm_hef_sp_lfp.py' returned non-zero exit status 1.
+  File "/home/bhc/codes/spike_snakemake/nnm_spike_lfp/Snakefile", line 72, in __rule_nnm_hef_sp_lfp
+  File "/home/bhc/anaconda3/lib/python3.7/concurrent/futures/thread.py", line 57, in run
+Removing output files of failed job nnm_hef_sp_lfp since they might be corrupted:
+/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr33_190321_nnm_hef_spk.png
+[Thu Jul 30 05:02:51 2020]
+Error in rule nnm_lef_sp_lfp:
+    jobid: 52
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr50_190724_nnm_lef_spk.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/lfp/cr50_190724_nnm_lef_lfp.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fps/cr50_190724_nnm_lef_fps.png, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/fpl/cr50_190724_nnm_lef_fpl.png
+
+RuleException:
+CalledProcessError in line 85 of /home/bhc/codes/spike_snakemake/nnm_spike_lfp/Snakefile:
+Command 'set -euo pipefail;  /home/bhc/anaconda3/bin/python3.7 /home/bhc/codes/spike_snakemake/nnm_spike_lfp/.snakemake/scripts/tmpskngtqn_.nnm_lef_sp_lfp.py' returned non-zero exit status 1.
+  File "/home/bhc/codes/spike_snakemake/nnm_spike_lfp/Snakefile", line 85, in __rule_nnm_lef_sp_lfp
+  File "/home/bhc/anaconda3/lib/python3.7/concurrent/futures/thread.py", line 57, in run
+Removing output files of failed job nnm_lef_sp_lfp since they might be corrupted:
+/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/image/nnm_sp_lfp/spk/cr50_190724_nnm_lef_spk.png
+Complete log: /home/bhc/codes/spike_snakemake/nnm_spike_lfp/.snakemake/log/2020-07-30T050241.364778.snakemake.log

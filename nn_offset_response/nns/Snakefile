@@ -1,0 +1,34 @@
+# Removed cr31 because it's bad. Removed cr33 because it has only 70 dB: you need to added it later. Missing cr103 for no obvious reason.
+# NAMES = ['cr50_190724', 'cr79_200211', 'cr90_201023', 'cr94_201112', 'cr92_2011029', 'cr93_201110', 'cr94_201112', 'cr95_201117', 'cr96_201119', 'cr98_201203', 'cr101_201211', 'cr102_201214', 'cr103_201215']
+NAMES2 = ['cr50_190724', 'cr79_200211', 'cr90_201023', 'cr94_201112', 'cr92_201029', 'cr93_201110', 'cr94_201112', 'cr95_201117', 'cr96_201119', 'cr98_201203', 'cr101_201211', 'cr102_201214']
+
+rule all:
+    input:
+        expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_lfp_avg/{name}_nn_lfp_a.pk", name=NAMES2),
+        expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/{name}_tsp.hdf5", name=NAMES2),
+        expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_lfp_avg/{name}_nn_lfp_a.pk", name=NAMES2),
+        expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/{name}_tsp.hdf5", name=NAMES2),
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_layer/nn_layer_nn_3_1.hdf5",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_layer/nn_layer_nn_1_1.hdf5"
+
+rule nn_layer_3_1:
+    input:
+        lfp = expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_lfp_avg/{name}_nn_lfp_a.pk", name=NAMES2),
+        spk = expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/{name}_tsp.hdf5", name=NAMES2)
+
+    output:
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_layer/nn_layer_nn_3_1.hdf5"
+    
+    script:
+        "/home/bhc/codes/nn_offset_response/nns/layer_nn_3_1.py"
+
+rule nn_layer_1_1:
+    input:
+        lfp = expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_lfp_avg/{name}_nn_lfp_a.pk", name=NAMES2),
+        spk = expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/{name}_tsp.hdf5", name=NAMES2),
+
+    output:
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_layer/nn_layer_nn_1_1.hdf5"
+    
+    script:
+        "/home/bhc/codes/nn_offset_response/nns/layer_nn_1_1.py"

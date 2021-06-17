@@ -1,0 +1,69 @@
+NAMES0 = ['cr31_190312', 'cr33_190321', 'cr50_190724']
+
+NAMES1 = ['cr92_201029', 'cr93_201110', 'cr94_201112']
+
+NAMES2 = ['cr96_201119', 'cr98_201203', 'cr103_201215']
+
+NAMES3 = ['cr79_200211', 'cr90_201023', 'cr95_201117']
+
+NAMES4 = ['cr101_201211', 'cr102_201214']
+
+path = "/home/bhc/"
+
+rule all:
+    input:
+        path + "OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/offset_mean_std_0.hdf5",
+        path + "OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/offset_mean_std_1.hdf5",
+        path + "OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/offset_mean_std_2.hdf5",
+        path + "OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/offset_mean_std_3.hdf5",
+        path + "OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/offset_mean_std_4.hdf5"
+
+rule threshold_0:
+    input:
+        expand(path + "OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/{name}_tsp.hdf5", name=NAMES0)
+        
+    output:
+        path + "OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/offset_mean_std_0.hdf5"
+
+    script:
+        path + "codes/zwicker_tone/nn_offset_response/temp2/threshold.py"
+
+rule threshold_1:
+    input:
+        expand(path + "OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/{name}_tsp.hdf5", name=NAMES1)
+        
+    output:
+        path + "OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/offset_mean_std_1.hdf5"
+
+    script:
+        path + "codes/zwicker_tone/nn_offset_response/temp2/threshold.py"
+
+rule threshold_2:
+    input:
+        expand(path + "OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/{name}_tsp.hdf5", name=NAMES2)
+        
+    output:
+        path + "OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/offset_mean_std_2.hdf5"
+
+    script:
+        path + "codes/zwicker_tone/nn_offset_response/temp2/threshold.py"
+
+rule threshold_3:
+    input:
+        expand(path + "OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/{name}_tsp.hdf5", name=NAMES3)
+        
+    output:
+        path + "OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/offset_mean_std_3.hdf5"
+
+    script:
+        path + "codes/zwicker_tone/nn_offset_response/temp2/threshold.py"
+
+rule threshold_4:
+    input:
+        expand(path + "OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/{name}_tsp.hdf5", name=NAMES4)
+        
+    output:
+        path + "OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/offset_mean_std_4.hdf5"
+
+    script:
+        path + "codes/zwicker_tone/nn_offset_response/temp2/threshold.py"

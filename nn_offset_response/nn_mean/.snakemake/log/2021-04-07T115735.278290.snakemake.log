@@ -1,0 +1,213 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 4
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	animal_mean
+	1	offset_table
+	16	session_mean
+	19
+
+[Wed Apr  7 11:57:35 2021]
+rule session_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr31_190312_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr31_190312_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr31_190312_nn_mean.hdf5
+    jobid: 1
+    wildcards: name=cr31_190312
+
+[Wed Apr  7 11:57:35 2021]
+rule session_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr50_190724_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr50_190724_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr50_190724_nn_mean.hdf5
+    jobid: 3
+    wildcards: name=cr50_190724
+
+[Wed Apr  7 11:57:35 2021]
+rule session_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr79_200211_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr79_200211_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr79_200211_nn_mean.hdf5
+    jobid: 4
+    wildcards: name=cr79_200211
+
+[Wed Apr  7 11:57:35 2021]
+rule session_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr33_190321_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr33_190321_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr33_190321_nn_mean.hdf5
+    jobid: 2
+    wildcards: name=cr33_190321
+
+[Wed Apr  7 11:58:10 2021]
+Finished job 1.
+1 of 19 steps (5%) done
+
+[Wed Apr  7 11:58:10 2021]
+rule session_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr94_201112_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr94_201112_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr94_201112_nn_mean.hdf5
+    jobid: 8
+    wildcards: name=cr94_201112
+
+[Wed Apr  7 11:58:10 2021]
+Finished job 2.
+2 of 19 steps (11%) done
+
+[Wed Apr  7 11:58:10 2021]
+rule session_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr90_201023_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr90_201023_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr90_201023_nn_mean.hdf5
+    jobid: 5
+    wildcards: name=cr90_201023
+
+[Wed Apr  7 11:58:48 2021]
+Finished job 3.
+3 of 19 steps (16%) done
+
+[Wed Apr  7 11:58:48 2021]
+rule session_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr95_201117_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr95_201117_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr95_201117_nn_mean.hdf5
+    jobid: 9
+    wildcards: name=cr95_201117
+
+[Wed Apr  7 11:58:48 2021]
+Finished job 4.
+4 of 19 steps (21%) done
+
+[Wed Apr  7 11:58:48 2021]
+rule session_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr96_201119_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr96_201119_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr96_201119_nn_mean.hdf5
+    jobid: 10
+    wildcards: name=cr96_201119
+
+[Wed Apr  7 11:59:21 2021]
+Finished job 8.
+5 of 19 steps (26%) done
+
+[Wed Apr  7 11:59:21 2021]
+rule session_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cl116_210318_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cl116_210318_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cl116_210318_nn_mean.hdf5
+    jobid: 16
+    wildcards: name=cl116_210318
+
+[Wed Apr  7 11:59:23 2021]
+Finished job 5.
+6 of 19 steps (32%) done
+
+[Wed Apr  7 11:59:23 2021]
+rule session_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr101_201211_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr101_201211_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr101_201211_nn_mean.hdf5
+    jobid: 12
+    wildcards: name=cr101_201211
+
+[Wed Apr  7 12:00:02 2021]
+Finished job 10.
+7 of 19 steps (37%) done
+
+[Wed Apr  7 12:00:02 2021]
+rule session_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr93_201110_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr93_201110_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr93_201110_nn_mean.hdf5
+    jobid: 7
+    wildcards: name=cr93_201110
+
+[Wed Apr  7 12:00:05 2021]
+Finished job 9.
+8 of 19 steps (42%) done
+
+[Wed Apr  7 12:00:05 2021]
+rule session_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr98_201203_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr98_201203_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr98_201203_nn_mean.hdf5
+    jobid: 11
+    wildcards: name=cr98_201203
+
+[Wed Apr  7 12:00:33 2021]
+Finished job 12.
+9 of 19 steps (47%) done
+
+[Wed Apr  7 12:00:33 2021]
+rule session_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cl115_210316_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cl115_210316_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cl115_210316_nn_mean.hdf5
+    jobid: 15
+    wildcards: name=cl115_210316
+
+[Wed Apr  7 12:01:16 2021]
+Finished job 7.
+10 of 19 steps (53%) done
+
+[Wed Apr  7 12:01:16 2021]
+rule session_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr92_201029_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr92_201029_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr92_201029_nn_mean.hdf5
+    jobid: 6
+    wildcards: name=cr92_201029
+
+[Wed Apr  7 12:01:17 2021]
+Finished job 11.
+11 of 19 steps (58%) done
+
+[Wed Apr  7 12:01:17 2021]
+rule session_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr102_201214_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr102_201214_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr102_201214_nn_mean.hdf5
+    jobid: 13
+    wildcards: name=cr102_201214
+
+[Wed Apr  7 12:01:44 2021]
+Finished job 16.
+12 of 19 steps (63%) done
+
+[Wed Apr  7 12:01:44 2021]
+rule session_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr103_201215_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr103_201215_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr103_201215_nn_mean.hdf5
+    jobid: 14
+    wildcards: name=cr103_201215
+
+[Wed Apr  7 12:01:47 2021]
+Finished job 15.
+13 of 19 steps (68%) done
+[Wed Apr  7 12:02:25 2021]
+Finished job 6.
+14 of 19 steps (74%) done
+[Wed Apr  7 12:02:27 2021]
+Finished job 13.
+15 of 19 steps (79%) done
+[Wed Apr  7 12:02:31 2021]
+Finished job 14.
+16 of 19 steps (84%) done
+
+[Wed Apr  7 12:02:31 2021]
+rule offset_table:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr31_190312_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr33_190321_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr50_190724_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr79_200211_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr90_201023_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr92_201029_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr93_201110_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr94_201112_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr95_201117_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr96_201119_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr98_201203_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr101_201211_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr102_201214_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr103_201215_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cl115_210316_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cl116_210318_nn_mean.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/offset_table2.csv
+    jobid: 18
+
+[Wed Apr  7 12:02:31 2021]
+rule animal_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr31_190312_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr33_190321_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr50_190724_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr79_200211_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr90_201023_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr92_201029_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr93_201110_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr94_201112_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr95_201117_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr96_201119_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr98_201203_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr101_201211_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr102_201214_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr103_201215_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cl115_210316_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cl116_210318_nn_mean.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/all_nn_mean.hdf5
+    jobid: 17
+
+[Wed Apr  7 12:02:32 2021]
+Finished job 18.
+17 of 19 steps (89%) done
+[Wed Apr  7 12:02:33 2021]
+Finished job 17.
+18 of 19 steps (95%) done
+
+[Wed Apr  7 12:02:33 2021]
+localrule all:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr31_190312_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr33_190321_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr50_190724_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr79_200211_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr90_201023_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr92_201029_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr93_201110_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr94_201112_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr95_201117_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr96_201119_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr98_201203_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr101_201211_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr102_201214_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr103_201215_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cl115_210316_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cl116_210318_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/all_nn_mean.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/offset_table2.csv
+    jobid: 0
+
+[Wed Apr  7 12:02:33 2021]
+Finished job 0.
+19 of 19 steps (100%) done
+Complete log: /home/bhc/codes/zwicker_tone/nn_offset_response/nn_mean/.snakemake/log/2021-04-07T115735.278290.snakemake.log

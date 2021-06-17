@@ -1,0 +1,3 @@
+NameError in line 154 of /home/bhc/codes/spike_snakemake/nnm_spike_lfp/Snakefile:
+name 'Token' is not defined
+  File "/home/bhc/codes/spike_snakemake/nnm_spike_lfp/Snakefile", line 154, in <module>

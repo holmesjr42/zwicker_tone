@@ -1,0 +1,36 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 4
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	2	nnm_1_1_sp_lfp
+	2	nnm_3_0_sp_lfp
+	2	nnm_3_1_sp_lfp
+	2	nnm_wn_1_1_sp_lfp
+	2	nnm_wn_3_1_sp_lfp
+	1	spk_lfp_average
+	1	spk_lfp_session_average
+	13
+
+[Wed Oct 14 20:45:56 2020]
+rule spk_lfp_session_average:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr87_201013_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr87_201013_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/cr87_201013_spk_lfp_avg_nnm.hdf5
+    jobid: 7
+    wildcards: name=cr87_201013
+
+[Wed Oct 14 20:46:09 2020]
+Error in rule spk_lfp_session_average:
+    jobid: 7
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/cr87_201013_spk_lfp_avg_nnm.hdf5
+
+RuleException:
+CalledProcessError in line 28 of /home/bhc/codes/spike_snakemake/nnm_spike_lfp/Snakefile:
+Command 'set -euo pipefail;  /home/bhc/anaconda3/bin/python3.7 /home/bhc/codes/spike_snakemake/nnm_spike_lfp/.snakemake/scripts/tmphgyqrbpc.spk_lfp_session_average.py' returned non-zero exit status 1.
+  File "/home/bhc/codes/spike_snakemake/nnm_spike_lfp/Snakefile", line 28, in __rule_spk_lfp_session_average
+  File "/home/bhc/anaconda3/lib/python3.7/concurrent/futures/thread.py", line 57, in run
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /home/bhc/codes/spike_snakemake/nnm_spike_lfp/.snakemake/log/2020-10-14T204556.689984.snakemake.log

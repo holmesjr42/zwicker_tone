@@ -1,0 +1,99 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 4
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	animal_mean
+	1	offset_table
+	16	session_mean
+	19
+
+[Wed Apr  7 11:38:07 2021]
+rule session_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr31_190312_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr31_190312_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr31_190312_nn_mean.hdf5
+    jobid: 1
+    wildcards: name=cr31_190312
+
+[Wed Apr  7 11:38:07 2021]
+rule session_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr50_190724_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr50_190724_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr50_190724_nn_mean.hdf5
+    jobid: 3
+    wildcards: name=cr50_190724
+
+[Wed Apr  7 11:38:07 2021]
+rule session_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr79_200211_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr79_200211_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr79_200211_nn_mean.hdf5
+    jobid: 4
+    wildcards: name=cr79_200211
+
+[Wed Apr  7 11:38:07 2021]
+rule session_mean:
+    input: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr33_190321_lfp_fil.hdf5, /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr33_190321_tsp.hdf5
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr33_190321_nn_mean.hdf5
+    jobid: 2
+    wildcards: name=cr33_190321
+
+[Wed Apr  7 11:38:40 2021]
+Error in rule session_mean:
+    jobid: 2
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr33_190321_nn_mean.hdf5
+
+RuleException:
+CalledProcessError in line 19 of /home/bhc/codes/zwicker_tone/nn_offset_response/nn_mean/Snakefile:
+Command 'set -euo pipefail;  /home/bhc/anaconda3/bin/python /home/bhc/codes/zwicker_tone/nn_offset_response/nn_mean/.snakemake/scripts/tmp5oyfpguu.nn_session_mean.py' returned non-zero exit status 1.
+  File "/home/bhc/anaconda3/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 2319, in run_wrapper
+  File "/home/bhc/codes/zwicker_tone/nn_offset_response/nn_mean/Snakefile", line 19, in __rule_session_mean
+  File "/home/bhc/anaconda3/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 568, in _callback
+  File "/home/bhc/anaconda3/lib/python3.8/concurrent/futures/thread.py", line 57, in run
+  File "/home/bhc/anaconda3/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 554, in cached_or_run
+  File "/home/bhc/anaconda3/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 2350, in run_wrapper
+[Wed Apr  7 11:38:41 2021]
+Error in rule session_mean:
+    jobid: 1
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr31_190312_nn_mean.hdf5
+
+RuleException:
+CalledProcessError in line 19 of /home/bhc/codes/zwicker_tone/nn_offset_response/nn_mean/Snakefile:
+Command 'set -euo pipefail;  /home/bhc/anaconda3/bin/python /home/bhc/codes/zwicker_tone/nn_offset_response/nn_mean/.snakemake/scripts/tmp8kzsl7kf.nn_session_mean.py' returned non-zero exit status 1.
+  File "/home/bhc/anaconda3/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 2319, in run_wrapper
+  File "/home/bhc/codes/zwicker_tone/nn_offset_response/nn_mean/Snakefile", line 19, in __rule_session_mean
+  File "/home/bhc/anaconda3/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 568, in _callback
+  File "/home/bhc/anaconda3/lib/python3.8/concurrent/futures/thread.py", line 57, in run
+  File "/home/bhc/anaconda3/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 554, in cached_or_run
+  File "/home/bhc/anaconda3/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 2350, in run_wrapper
+[Wed Apr  7 11:39:12 2021]
+Error in rule session_mean:
+    jobid: 3
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr50_190724_nn_mean.hdf5
+
+RuleException:
+CalledProcessError in line 19 of /home/bhc/codes/zwicker_tone/nn_offset_response/nn_mean/Snakefile:
+Command 'set -euo pipefail;  /home/bhc/anaconda3/bin/python /home/bhc/codes/zwicker_tone/nn_offset_response/nn_mean/.snakemake/scripts/tmpgi4rdnzn.nn_session_mean.py' returned non-zero exit status 1.
+  File "/home/bhc/anaconda3/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 2319, in run_wrapper
+  File "/home/bhc/codes/zwicker_tone/nn_offset_response/nn_mean/Snakefile", line 19, in __rule_session_mean
+  File "/home/bhc/anaconda3/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 568, in _callback
+  File "/home/bhc/anaconda3/lib/python3.8/concurrent/futures/thread.py", line 57, in run
+  File "/home/bhc/anaconda3/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 554, in cached_or_run
+  File "/home/bhc/anaconda3/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 2350, in run_wrapper
+[Wed Apr  7 11:39:12 2021]
+Error in rule session_mean:
+    jobid: 4
+    output: /home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_mean/cr79_200211_nn_mean.hdf5
+
+RuleException:
+CalledProcessError in line 19 of /home/bhc/codes/zwicker_tone/nn_offset_response/nn_mean/Snakefile:
+Command 'set -euo pipefail;  /home/bhc/anaconda3/bin/python /home/bhc/codes/zwicker_tone/nn_offset_response/nn_mean/.snakemake/scripts/tmptib5v7n4.nn_session_mean.py' returned non-zero exit status 1.
+  File "/home/bhc/anaconda3/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 2319, in run_wrapper
+  File "/home/bhc/codes/zwicker_tone/nn_offset_response/nn_mean/Snakefile", line 19, in __rule_session_mean
+  File "/home/bhc/anaconda3/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 568, in _callback
+  File "/home/bhc/anaconda3/lib/python3.8/concurrent/futures/thread.py", line 57, in run
+  File "/home/bhc/anaconda3/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 554, in cached_or_run
+  File "/home/bhc/anaconda3/lib/python3.8/site-packages/snakemake/executors/__init__.py", line 2350, in run_wrapper
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /home/bhc/codes/zwicker_tone/nn_offset_response/nn_mean/.snakemake/log/2021-04-07T113807.092979.snakemake.log

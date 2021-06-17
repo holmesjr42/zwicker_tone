@@ -1,0 +1,193 @@
+import os
+import sys
+
+print(os.path.dirname(os.getcwd()))
+sys.path.insert(1, os.path.dirname(os.getcwd()))
+import numpy as np
+import pickle
+import matplotlib.pyplot as plt
+from matplotlib import colors
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+from matplotlib import ticker
+import matplotlib.image as mpimg
+from parameters import parameters as pm
+import seaborn as sns
+import h5py
+from matplotlib.colors import ListedColormap
+from tools import nnm_plot as nnmp
+import pylustrator
+import quantities as pq
+
+pylustrator.start()
+sys.path.pop(1)
+
+'''
+Create heatmap for firing rate
+'''
+
+# import features
+nnc = pm.Nnmcontfeat
+nns = pm.Nnsifeat
+com = pm.Commonfeat
+
+# some setups for plotting e.g. color scheme
+val = pm.Setup(cond='nnm_3_0', cond2='tsp', mode=1)
+mode, ylc, condc, condt, nb, ch, depth, dcmap, ws, hs, rt, cct, cb, ccmap = \
+    val.values()
+lvl = com.db['lv']  # SPLdB list
+
+file_input = '/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021' \
+             '/data/dataset/nnm_spk_lfp_avg/all_spk_lfp_avg_nnm.hdf5'
+# file_input = snakemake.input[0]
+
+# stimulus conditions for this script
+c_n = 'nnm_3_1'
+c_w = 'nnm_wn_3_1'
+c_c = 'nnm_3_1_strf'
+
+# list of layer names
+layer_name = ['Supragranular\nlayer', 'Granular\nlayer',
+              'Infragranular\nlayer']
+
+spk = {}  # dict for spk data regarding dBSPL
+
+# load file
+with h5py.File(file_input, 'r') as dat:
+    sk = [dat['fpt'][c_c], dat['fpt'][c_n], dat['fpt'][c_w]]  # spk
+
+    for i in lvl:
+        spk[i] = [np.array(sk[0][i]), np.array(sk[1][i][0]),
+                  np.array(sk[1][i][1]), np.array(sk[2][i][1])] * (pq.ms ** -1)
+        spk[i].units = pq.s ** (-1)
+
+lvp = nnmp.db_lv(spk)  # SPL dB which actually has data
+
+# average it as infra/granule/supragranule layer
+s_ave = {}
+mn_su = []
+mn_gr = []
+mn_in = []
+
+mx_su = []
+mx_gr = []
+mx_in = []
+
+for i in lvp:
+    ct = []
+    nnon = []
+    nnoff = []
+    wnoff = []
+    con = [ct, nnon, nnoff, wnoff]
+    for j in range(len(spk[i])):
+        layer = [spk[i][j][0:6], spk[i][j][6:9], spk[i][j][9:16]]
+        con[j].append([
+            np.mean(layer[0], axis=0),
+            np.mean(layer[1], axis=0),
+            np.mean(layer[2], axis=0)])
+        con[j] = np.concatenate(con[j])
+        mn_su.append(np.min(con[j][0]))
+        mn_gr.append(np.min(con[j][1]))
+        mn_in.append(np.min(con[j][2]))
+
+        mx_su.append(np.max(con[j][0]))
+        mx_gr.append(np.max(con[j][1]))
+        mx_in.append(np.max(con[j][2]))
+
+    s_ave[i] = con
+
+mxs = [np.max(mx_su), np.max(mx_gr), np.max(mx_in)]
+
+# plot start
+s_img = []  # for normalizing heatmap
+
+s_fig = plt.figure(0, figsize=(16, 9))
+
+s_axs = s_fig.subplots(3, 4)
+
+for i in range(len(lvp)):
+    data = s_ave[lvp[i]]
+    # pv = p[lvp[i]]
+    for j in range(len(data[0])):
+        s_axs[j, i].axvspan(-1, 1, alpha=0.3, color='#bccbe3')
+
+        s_axs[j, i].plot(np.linspace(-1.5, 1.5, 25, endpoint=True),
+                         data[0][j], label='Control',
+                         color=dcmap[0], linestyle='-'
+                         )
+
+        s_axs[j, i].plot(np.linspace(-1.5, 1.5, 25, endpoint=True),
+                         data[1][j], label='NN-On',
+                         color=dcmap[1], linestyle='--'
+                         )
+
+        s_axs[j, i].plot(np.linspace(-1.5, 1.5, 25, endpoint=True),
+                         data[2][j], label='NN-Off',
+                         color=dcmap[2], linestyle='-.'
+                         )
+
+        s_axs[j, i].plot(np.linspace(-1.5, 1.5, 25, endpoint=True),
+                         data[3][j], label='WN-Off',
+                         color=dcmap[3], linestyle=':'
+                         )
+
+        s_axs[j, i].set_xticks([-1.5, -1, 0, 1, 1.5])
+
+        mx = np.around(mxs[j], decimals=-1)
+
+        s_axs[j, i].set_yticks([0, np.around(mx / 2, decimals=-1), mx])
+        # s_axs[j, i].set_ylim([0, mx * 1.2])
+        s_axs[j, i].set_xlim([-1.5, 1.5])
+        s_axs[j, i].label_outer()
+
+        if j == 0:
+            s_axs[j, i].text(0, 0, f'{lvp[i]} dB',
+                             horizontalalignment='center',
+                             verticalalignment='center',
+                             # rotation='vertical',
+                             transform=s_axs[j, i].transAxes,
+                             fontdict={'weight': 'bold', 'size': 25}
+                             )
+
+        if i == 0:
+            s_axs[j, i].text(0, 0, layer_name[j],
+                             horizontalalignment='center',
+                             verticalalignment='center',
+                             rotation='vertical',
+                             transform=s_axs[j, i].transAxes,
+                             fontdict={'size': 15}
+                             )
+
+s_axs[0, 3].legend(prop={'size': 9},
+                   loc='upper right',
+                   bbox_to_anchor=(1, 1))
+
+s_axs[1, 2].text(0, 0, 'Distance from the center frequency\n(Octave)',
+                 horizontalalignment='center',
+                 verticalalignment='center',
+                 # rotation='vertical',
+                 transform=s_axs[1, 2].transAxes,
+                 fontdict={'weight': 'bold', 'size': 23}
+                 )
+
+s_axs[0, 0].text(0, 0, 'Firing rate (spk / s)',
+                 horizontalalignment='center',
+                 verticalalignment='center',
+                 rotation='vertical',
+                 transform=s_axs[1, 3].transAxes,
+                 fontdict={'weight': 'bold', 'size': 23}
+                 )
+
+#% start: automatic generated code from pylustrator
+plt.figure(0).ax_dict = {ax.get_label(): ax for ax in plt.figure(0).axes}
+import matplotlib as mpl
+plt.figure(0).axes[0].texts[0].set_position([0.508226, 1.236364])
+plt.figure(0).axes[0].texts[1].set_position([-0.511935, 0.559307])
+plt.figure(0).axes[0].texts[2].set_position([-3.839516, 0.539683])
+plt.figure(0).axes[1].texts[0].set_position([0.474839, 1.236364])
+plt.figure(0).axes[2].texts[0].set_position([0.497097, 1.236364])
+plt.figure(0).axes[3].texts[0].set_position([0.504516, 1.236364])
+plt.figure(0).axes[4].texts[0].set_position([-0.511935, 0.495527])
+plt.figure(0).axes[6].texts[0].set_position([-0.159516, -1.506205])
+plt.figure(0).axes[8].texts[0].set_position([-0.511935, 0.534776])
+#% end: automatic generated code from pylustrator
+plt.show()

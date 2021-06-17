@@ -1,0 +1,92 @@
+# I'm going to remove 'cr35_190403' because it's not a good data
+
+NAMES = ['cr29_190228', 'cr30_190305', 'cr31_190312', 'cr33_190321', 'cr50_190724', 'cr79_200211', 'cr90_201023', 'cr94_201112', 'cr95_201117', 'cr96_201119', 'cr97_201201']
+NAMES2 = ['cr33_190321', 'cr50_190724', 'cr79_200211', 'cr90_201023', 'cr94_201112', 'cr95_201117']
+# remove 'cr29', 'cr30', 'cr90' for statistics
+# NAMES = ['cr31_190312', 'cr33_190321', 'cr50_190724', 'cr79_200211', 'cr94_201112', 'cr95_201117', 'cr96_201119', 'cr97_201201', 'cr101_201211']
+rule all:
+    input:
+        expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/{name}_spk_lfp_avg_nnm.hdf5", name=NAMES),
+        # expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/{name}_spk_lfp_avg_nnm.hdf5", name=NAMES2),
+
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/fp_layer/fp_layer_nnm_3_0.hdf5",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/fp_layer/fp_layer_nnm_wn_3_1.hdf5",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/fp_layer/fp_layer_nnm_3_1.hdf5",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/fp_layer/fp_layer_nnm_1_1.hdf5",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg//nnm_time_depth.hdf5",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/dataframe/3_0_spk.csv",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/dataframe/3_0_lfp.csv",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/dataframe/3_1_spk.csv",
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/dataframe/3_1_lfp.csv"
+
+rule fp_layer_3_0:
+    input:
+        expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/{name}_spk_lfp_avg_nnm.hdf5", name=NAMES)
+
+    output:
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/fp_layer/fp_layer_nnm_3_0.hdf5"
+    
+    script:
+        "/home/bhc/codes/zwicker_tone/nn_evoked_activity/nnms/fp_layer_nnm_3_0.py"
+
+rule fp_layer_3_1:
+    input:
+        expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/{name}_spk_lfp_avg_nnm.hdf5", name=NAMES)
+
+    output:
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/fp_layer/fp_layer_nnm_3_1.hdf5"
+    
+    script:
+        "/home/bhc/codes/zwicker_tone/nn_evoked_activity/nnms/fp_layer_nnm_3_1.py"
+        
+rule fp_layer_wn_3_1:
+    input:
+        expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/{name}_spk_lfp_avg_nnm.hdf5", name=NAMES2)
+
+    output:
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/fp_layer/fp_layer_nnm_wn_3_1.hdf5"
+    
+    script:
+        "/home/bhc/codes/zwicker_tone/nn_evoked_activity/nnms/fp_layer_nnm_wn_3_1.py"
+
+rule fp_layer_1_1:
+    input:
+        expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/{name}_spk_lfp_avg_nnm.hdf5", name=NAMES)
+
+    output:
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/fp_layer/fp_layer_nnm_1_1.hdf5"
+    
+    script:
+        "/home/bhc/codes/zwicker_tone/nn_evoked_activity/nnms/fp_layer_nnm_1_1.py"
+
+rule nnm_time_detph:
+    input:
+        expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/{name}_spk_lfp_avg_nnm.hdf5", name=NAMES)
+    
+    output:
+        "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg//nnm_time_depth.hdf5"
+    
+    script:
+        "/home/bhc/codes/zwicker_tone/nn_evoked_activity/nnms/time_depth_difference.py"
+
+rule dataframe:
+        input:
+            expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/{name}_spk_lfp_avg_nnm.hdf5", name=NAMES)
+        
+        output:
+            spk = "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/dataframe/3_0_spk.csv",
+            lfp = "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/dataframe/3_0_lfp.csv"
+
+        script:
+            "/home/bhc/codes/zwicker_tone/nn_evoked_activity/nnms/nnm_3_0_dataframe.py"
+
+rule dataframe_3_1:
+        input:
+            expand("/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nnm_spk_lfp_avg/{name}_spk_lfp_avg_nnm.hdf5", name=NAMES2)
+        
+        output:
+            spk = "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/dataframe/3_1_spk.csv",
+            lfp = "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/dataframe/3_1_lfp.csv"
+
+        script:
+            "/home/bhc/codes/zwicker_tone/nn_evoked_activity/nnms/nnm_3_1_dataframe.py"

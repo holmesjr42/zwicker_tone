@@ -1,0 +1,206 @@
+import os
+import sys
+
+sys.path.insert(1, os.path.dirname(os.getcwd()))
+
+import numpy as np
+import h5py
+from tools import nn_tool as nt
+from parameters import parameters as pm
+import matplotlib.pyplot as plt
+import pickle
+import quantities as pq
+import pylustrator
+
+pylustrator.start()
+sys.path.pop(1)
+
+'''
+This is for a single animal data
+plots psth and averaged raw lfp in the same figure
+'''
+# exemplary animals
+d_lfp = "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data" \
+        "/dataset/nn_lfp_avg/cr95_201117_nn_lfp_a.pk"
+d_spk = "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data" \
+        "/dataset/tsp/cr95_201117_tsp.hdf5"
+
+# file = "/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data\
+#         /dataset/nn_layer/nn_layer_nn_3_1.hdf5"
+'''
+setup
+'''
+dbs = ['70', '60']
+db = [0, 1]
+val = pm.Setup(cond2='tsp')
+cb = val.values()[-2]
+dcmap = val.values()[7]
+names = ['nn_3_1', 'nn_wn_3_1']
+legends = ['NN', 'WN']
+nn = names[0]
+wn = names[1]
+ch_l = [0, 7, 11]  # channel number
+depth = [100, 800, 1200]
+l_list = ['supr', 'gran', 'infr']  # list of layers
+# names of the conditions
+
+# spk
+nrastor = {}
+npsth = {}
+nsmooth = {}
+ntime = {}
+'''
+data retrieve
+'''
+g_sf = {}  # storing spk data exp
+g_lf = {}  # storing lfp data exp
+
+# lfp/spk partition
+for g in [g_lf, g_sf]:
+    for d in db:
+        s = dbs[d]
+        g[s] = {}
+        for n in names:
+            g[s][n] = {}
+            for l in l_list:
+                g[s][n][l] = []
+
+# lfp
+for n in names:
+    for lv in db:
+        d = dbs[lv]
+        # lfp
+        with open(d_lfp, 'rb') as datas:
+            dat = pickle.load(datas)
+            la = dat['la']
+        # onset/offset points and change the unit
+        la_n = la[n][d] * pq.microvolt
+        la_n.units = pq.mV
+
+        for i in range(len(ch_l)):
+            g_lf[d][n][l_list[i]].append(la_n[ch_l[i]])
+            g_lf[d][n][l_list[i]] = np.concatenate(g_lf[d][n][l_list[i]])
+
+# spike
+with h5py.File(d_spk, 'r') as h_5:
+    for n in names:
+        for lv in db:
+            d = dbs[lv]
+            mua = h_5[n][lv]
+            nn = nt.index_spike(mua)
+            nrastor[n], npsth[n], nsmooth[n], ntime[n] = nt.psth(nn, n)
+
+            ns = nsmooth[n] * pq.ms ** (-1)
+            ns.units = pq.s ** (-1)
+
+            for i in range(len(ch_l)):
+                g_sf[d][n][l_list[i]].append(ns[ch_l[i]])
+                g_sf[d][n][l_list[i]] = np.concatenate(g_sf[d][n][l_list[i]])
+
+n_fig = plt.figure(0, figsize=(10, 9))
+n_axs = n_fig.subplots(3, 2)
+
+# for 70 dB, spk
+for n in range(len(names)):
+    for layer in range(len(l_list)):
+        axs = n_axs[layer, 0]
+        s_hist = g_sf['70'][names[n]][l_list[layer]]
+        s_hist[2800:2811] = np.nan
+        times = np.arange(len(s_hist)) / 1000
+        axs.axvspan(2.8, 3.0, alpha=0.3, color='#bccbe3')
+        axs.plot(
+            times[::20], s_hist[::20], color=dcmap[n],
+            alpha=0.75, linewidth=1.5, label=legends[n]
+            )
+        axs.set_xlim([2.8, 4.010])
+        axs.set_xticks(np.arange(2.9, 4, 0.2), minor=True)
+        axs.set_ylim([0, 160])
+        axs.set_yticks(np.arange(0, 160, 50))
+        # axs.tick_params(axis='both', which='major', labelsize=10)
+n_axs[0, 0].legend(prop={'size': 9},
+                   loc='upper right',
+                   bbox_to_anchor=(1, 1))
+
+n_axs[0, 0].text(0.5, 1.1, 'MUA',
+                 horizontalalignment='center',
+                 verticalalignment='center',
+                 # rotation='vertical',
+                 transform=n_axs[0, 0].transAxes,
+                 fontdict={'weight': 'bold', 'size': 20}
+                 )
+
+n_axs[1, 0].text(-0.2, 0.5, 'Firing rate (spk / s)',
+                 horizontalalignment='center',
+                 verticalalignment='center',
+                 rotation='vertical',
+                 transform=n_axs[1, 0].transAxes,
+                 fontdict={'weight': 'bold', 'size': 15}
+                 )
+
+n_axs[2, 0].text(0.5, -0.3, 'Time (s)',
+                 horizontalalignment='center',
+                 verticalalignment='center',
+                 # rotation='vertical',
+                 transform=n_axs[2, 0].transAxes,
+                 fontdict={'weight': 'bold', 'size': 15}
+                 )
+
+# lfp
+
+for n in range(len(names)):
+    for layer in range(len(l_list)):
+        axl = n_axs[layer, 1]
+        s_hist = g_lf['70'][names[n]][l_list[layer]]
+        s_hist[2800:2811] = np.nan
+        s_hist[4000:4010] = np.nan
+        times = np.arange(len(s_hist)) / 1000
+        axl.axvspan(2.8, 3.0, alpha=0.3, color='#bccbe3')
+        axl.plot(
+            times[::20], s_hist[::20], color=dcmap[n],
+            alpha=0.75, linewidth=1.5, label=legends[n]
+            )
+
+        axl.set_xlim([2.8, 4.010])
+        axl.set_xticks(np.arange(2.9, 4, 0.2), minor=True)
+        axl.set_ylim([-0.15, 0.15])
+        axl.set_yticks(np.arange(-0.1, 0.11, 0.1))
+        axl.set_yticks([-0.05, 0.05], minor=True)
+
+n_axs[0, 1].text(0.5, 1.1, 'LFP',
+                 horizontalalignment='center',
+                 verticalalignment='center',
+                 # rotation='vertical',
+                 transform=n_axs[0, 1].transAxes,
+                 fontdict={'weight': 'bold', 'size': 20}
+                 )
+
+n_axs[1, 1].text(-0.2, 0.5, 'Amplitude (mV))',
+                 horizontalalignment='center',
+                 verticalalignment='center',
+                 rotation='vertical',
+                 transform=n_axs[1, 1].transAxes,
+                 fontdict={'weight': 'bold', 'size': 15}
+                 )
+
+n_axs[2, 1].text(0.5, -0.3, 'Time (s)',
+                 horizontalalignment='center',
+                 verticalalignment='center',
+                 # rotation='vertical',
+                 transform=n_axs[2, 1].transAxes,
+                 fontdict={'weight': 'bold', 'size': 15}
+                 )
+
+
+#% start: automatic generated code from pylustrator
+plt.figure(0).ax_dict = {ax.get_label(): ax for ax in plt.figure(0).axes}
+import matplotlib as mpl
+plt.figure(0).axes[0].set_position([0.125000, 0.653529, 0.293273, 0.226471])
+plt.figure(0).axes[1].set_position([0.606727, 0.653529, 0.293273, 0.226471])
+plt.figure(0).axes[2].set_position([0.125000, 0.381765, 0.293273, 0.226471])
+plt.figure(0).axes[2].texts[0].set_position([-0.251147, 0.500000])
+plt.figure(0).axes[3].set_position([0.606727, 0.381765, 0.293273, 0.226471])
+plt.figure(0).axes[3].texts[0].set_position([-0.251147, 0.500000])
+plt.figure(0).axes[4].set_position([0.125000, 0.110000, 0.293273, 0.226471])
+plt.figure(0).axes[5].set_position([0.606727, 0.110000, 0.293273, 0.226471])
+#% end: automatic generated code from pylustrator
+plt.show()
