@@ -47,6 +47,25 @@ def index_spike(tsp):
                 mua[i][k1] = 1
     return mua
 
+def threshold_collect(data, ti, tf, t_off):
+    """
+    :param data: data of noise condition spikes with either 3/1 or 1/1 condition
+    :param ti: t_i list for a session
+    :param tf: tf list for a session
+    :param t_off: offset phase start point for each subsession
+    :return: mean and std of baseline to calculate threshold
+    """
+    ths = []
+    data = np.array(data)
+    trf = [150, 50]  # time points to calculate reference session range
+
+    for i in range(len(ti)):
+        t_i = ti[i] + t_off + trf[0]
+        t_f = tf[i] - trf[1]
+        ths.append(data[:, t_i:t_f])
+    base = np.concatenate(ths, axis=1)
+    return base
+
 
 def psth(mua, indt):
     """

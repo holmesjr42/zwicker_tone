@@ -6,7 +6,7 @@ from matplotlib.colors import ListedColormap
 import seaborn as sns
 
 file_path = '/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/'
-param_path = '/home/bhc/codes/nn_tool/parameter/'
+param_path = '/home/bhc/codes/zwicker_tone/nn_tool/parameter/'
 sr_lfp = 1061.5
 
 

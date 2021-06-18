@@ -1,0 +1,4 @@
+Building DAG of jobs...
+MissingInputException in line 72 of /home/bhc/codes/zwicker_tone/nn_offset_response/temp2/Snakefile:
+Missing input files for rule merge_threshold:
+/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/offset_mean_std_*.hdf5
