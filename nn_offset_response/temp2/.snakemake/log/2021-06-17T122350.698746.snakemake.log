@@ -1,3 +1,0 @@
-WildcardError in line 74 of /home/bhc/codes/zwicker_tone/nn_offset_response/temp2/Snakefile:
-No values given for wildcard 'num'.
-  File "/home/bhc/codes/zwicker_tone/nn_offset_response/temp2/Snakefile", line 74, in <module>

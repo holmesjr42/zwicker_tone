@@ -1,0 +1,21 @@
+NAMES = [
+    'cr31_190312', 'cr33_190321', 'cr50_190724', 'cr79_200211', 'cr90_201023', 'cr92_201029', 'cr93_201110', 'cr94_201112',  'cr95_201117', 'cr96_201119', 'cr98_201203', 'cr101_201211', 'cr102_201214', 'cr103_201215'
+        ]
+
+import os
+path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))))
+
+rule all:
+    input:
+         path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/offset_mean_std_threshold.hdf5"
+
+rule threshold:
+    input:
+        spk = expand(path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/{name}_tsp.hdf5", name=NAMES),
+        lfp = expand(path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/{name}_lfp_fil.hdf5", name=NAMES)
+        
+    output:
+        path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/offset_mean_std_threshold.hdf5"
+
+    script:
+         path + "/codes/zwicker_tone/nn_offset_response/threshold/threshold.py"
