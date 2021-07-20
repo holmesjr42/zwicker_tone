@@ -363,7 +363,7 @@ class CSD(object):
         try:
             assert (filterfunction in ['filtfilt', 'convolve'])
         except AssertionError as ae:
-            raise ae("{} not equal to 'filtfilt' or 'convolve'".format(
+            raise ae("{} not equal to 'filtfilt'class or 'convolve'".format(
                 filterfunction))
 
         if self.f_type == 'boxcar':
@@ -457,9 +457,9 @@ class StandardCSD(CSD):
             else:
                 self.lfp = np.empty(
                     (lfp.shape[0] + 2, lfp.shape[1])) * lfp.units
-            self.lfp[0,] = lfp[0,]
+            self.lfp[0, ] = lfp[0, ]
             self.lfp[1:-1, ] = lfp
-            self.lfp[-1,] = lfp[-1,]
+            self.lfp[-1, ] = lfp[-1, ]
         else:
             self.lfp = lfp
 

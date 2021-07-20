@@ -16,8 +16,8 @@ sys.path.pop(1)
 path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))))
 
 file_input = snakemake.input.data
-lv = snakemake.input.lv
-condition = snakemake.input.condition
+lv = '70'
+condition = '1_1'
 # file_input = f'{path}/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/dataset/cr50_190724_offset.hdf5'
 # file_spk = ['/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr50_190724_tsp.hdf5']
 # file_lfp = ['/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/cr50_190724_lfp_fil.hdf5']
@@ -46,7 +46,7 @@ group = {}
 types = ['spk', 'lfp']
 cd = cond[c_ind]
 ch = np.arange(0, 16).reshape(4, 4)
-st = [[2950, 3150], [1000, 1150]]
+st = [[3000, 3150], [1000, 1150]]
 lt = [
     [nt.lfp_index(2950), nt.lfp_index(3150)],
     [nt.lfp_index(1000), nt.lfp_index(1150)]
@@ -71,10 +71,14 @@ with h5py.File(file_input, 'r') as dat:
         for i in range(4):
             for j in range(4):
                 h = ch[i][j]
-                t = np.linspace(1000, 1150, len(dat[0][h][tt[1][0]:tt[1][1]]))
-                axs[i, j].plot(t, dat[0][h][tt[1][0]:tt[1][1]], color='blue')
-                axs[i, j].plot(t, dat[1][h][tt[1][0]:tt[1][1]], color='orange')
+                t = np.linspace(st[c_ind][0], st[c_ind][1], len(dat[0][h][tt[c_ind][0]:tt[c_ind][1]]))
+                axs[i, j].plot(t, dat[0][h][tt[c_ind][0]:tt[c_ind][1]], color='blue')
+                axs[i, j].plot(t, dat[1][h][tt[c_ind][0]:tt[c_ind][1]], color='orange')
                 axs[i, j].axhline(th[k][h], color='k')
+                axs[i, j].axhline(th[k][h] * 0.2, color='cyan')
+                axs[i, j].axhline(th[k][h] * 0.4, color='cyan')
+                axs[i, j].axhline(th[k][h] * 0.6, color='cyan')
+                axs[i, j].axhline(th[k][h] * 0.8, color='cyan')
                 axs[i, j].axhline(tha[k][h], color='r')
         plt.savefig(snakemake.output[k], dpi=150)
         plt.clf()

@@ -1,0 +1,166 @@
+import os
+import sys
+
+sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
+
+import h5py
+import numpy as np
+from tools import nnm_plot as nnp
+from tools import nn_tool as nt
+from parameter import parameters as pm
+import pandas as pd
+import pylustrator
+import matplotlib.pyplot as plt
+
+pylustrator.start()
+sys.path.pop(1)
+
+path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))))
+
+val = pm.Setup(cond='nnm_3_0', cond2='tsp', mode=1)
+mode, ylc, condc, condt, nb, ch, depth, dcmap, ws, hs, rt, cct, cb, ccmap = \
+    val.values()
+
+file_input = f'{path}/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/dataset/' \
+             f'cr50_190724_offset.hdf5'
+l_index = 0
+c_index = 0
+c_thrs = ['3_1', '1_1']
+# condition setups
+cond = [['nn_3_1', 'nn_wn_3_1'], ['nn_1_1', 'nn_wn_1_1']]  # conditions for offset response experiment
+t_ind = [pm.Nn.ind_3_1, pm.Nn.ind_1_1]
+offset = [3000, 1000]  # offset start points for 3 / 1 and 1 / 1
+lvs = ['70', '60']  # spl db you are going to use
+types = ['spk', 'lfp']
+cd = cond[c_index]
+labels = ['NN', 'WN']
+ch = [3, 5, 7, 13]
+depth = [300, 600, 800, 1300]
+st = [[3000, 3150], [1000, 1150]]
+lt = [
+    [nt.lfp_index(2950), nt.lfp_index(3150)],
+    [nt.lfp_index(950), nt.lfp_index(1150)]
+]
+time = [st, lt]
+bfd = pm.Commonfeat.bf_dic
+n_list = ['nn', 'wn']
+n2_list = ['no_nn', 'no_wn']
+group = {'condition': [], 'bf': []}
+
+fig = plt.figure(figsize=(16, 16))
+s_axs = fig.subplots(len(ch), 2)
+
+with h5py.File(file_input, 'r') as dat:
+    a = nt.Offset(dat, file_input, c_thrs[c_index], lvs[l_index])
+    t_off = offset[c_index]
+    t_off_l1 = nt.lfp_index(offset[c_index])
+    t_off_l2 = nt.lfp_index(offset[c_index] + 100)
+    th = a.threshold()
+    tha = a.threshold_alt()
+
+    n_spk = np.array(dat['spk'][cd[0]]['smooth_psth'][l_index])[:, t_off:t_off + 101]
+    w_spk = np.array(dat['spk'][cd[1]]['smooth_psth'][l_index])[:, t_off:t_off + 101]
+
+    n_lfp = np.array(dat['lfp'][cd[0]]['mean'][l_index])[:, t_off_l1:t_off_l2]
+    w_lfp = np.array(dat['lfp'][cd[1]]['mean'][l_index])[:, t_off_l1:t_off_l2]
+
+    t_off = offset[c_index]
+    s_max = np.max([np.amax(n_spk), np.amax(w_spk)])
+
+    s_plot = [n_spk, w_spk]
+    l_plot = [n_lfp, w_lfp]
+
+    for s in range(2):
+        spk = s_plot[s]
+        lfp = l_plot[s]
+
+        for chs in range(len(ch)):
+            chan = ch[chs]
+            s_axs[chs, 0].plot(
+                np.linspace(0, 0.1, len(spk[chan])), spk[chan], color=dcmap[s], linewidth=3, label=labels[s]
+            )
+
+            s_axs[chs, 1].plot(
+                np.linspace(0, 0.1, len(lfp[chan])), lfp[chan], color=dcmap[s], linewidth=3, label=labels[s]
+            )
+            s_axs[chs, 0].axhline(tha[0][chan], color='#2e2e2e', linestyle='--', alpha=.7, linewidth=2)
+            # s_axs[chs, 0].set_ylim([0, s_max * 1.3])
+            # s_axs[chs, 1].axhline(tha[1][chan])
+
+            if s == 0:
+                s_axs[chs, 1].text(1, 0.5, f'{depth[chs]}' + r' $\mu$m',
+                                   horizontalalignment='center',
+                                   verticalalignment='center',
+                                   rotation='vertical',
+                                   transform=s_axs[chs, 1].transAxes,
+                                   fontdict={'weight': 'bold', 'size': 28}
+                                   )
+                # s_axs[chs].set_xlim([0, np.max(spk[chan]) * 1.3])
+                s_axs[chs, 0].tick_params(axis='both', which='major', labelsize=20, length=6, width=1.5)
+                s_axs[chs, 1].tick_params(axis='both', which='major', labelsize=20, length=6, width=1.5)
+
+                if chs != len(ch) - 1:
+                    s_axs[chs, 0].set_xticklabels([])
+                    s_axs[chs, 1].set_xticklabels([])
+            else:
+                continue
+
+s_axs[1, 0].text(
+    0, 0.5, 'Firing rate (1/s)',
+    horizontalalignment='center',
+    verticalalignment='center',
+    rotation='vertical',
+    transform=s_axs[1, 0].transAxes,
+    fontdict={'weight': 'bold', 'size': 28}
+)
+
+s_axs[1, 1].text(
+    0, 0.5, 'Amplitude (mV)',
+    horizontalalignment='center',
+    verticalalignment='center',
+    rotation='vertical',
+    transform=s_axs[1, 1].transAxes,
+    fontdict={'weight': 'bold', 'size': 28}
+)
+
+s_axs[3, 0].text(
+    1, 0, 'Time (s)',
+    horizontalalignment='center',
+    verticalalignment='center',
+    # rotation='vertical',
+    transform=s_axs[3, 0].transAxes,
+    fontdict={'weight': 'bold', 'size': 28}
+)
+
+s_axs[3, 0].legend(
+    prop={'size': 15},
+    loc='upper right',
+    bbox_to_anchor=(1, 1)
+)
+
+s_axs[3, 1].legend(
+    prop={'size': 15},
+    loc='lower right',
+    bbox_to_anchor=(1, 0)
+)
+
+#% start: automatic generated code from pylustrator
+plt.figure(1).ax_dict = {ax.get_label(): ax for ax in plt.figure(1).axes}
+import matplotlib as mpl
+plt.figure(1).axes[0].set_position([0.125000, 0.785002, 0.201231, 0.132759])
+plt.figure(1).axes[1].set_position([0.505208, 0.785002, 0.201231, 0.132759])
+plt.figure(1).axes[1].texts[0].set_position([1.144941, 0.492154])
+plt.figure(1).axes[2].set_position([0.125000, 0.625692, 0.201231, 0.132759])
+plt.figure(1).axes[2].texts[0].set_position([-0.383059, -0.282185])
+plt.figure(1).axes[3].set_position([0.505208, 0.625692, 0.201231, 0.132759])
+plt.figure(1).axes[3].texts[0].set_position([1.144941, 0.492154])
+plt.figure(1).axes[3].texts[1].set_position([-0.429647, -0.282185])
+plt.figure(1).axes[4].set_position([0.125000, 0.466381, 0.201231, 0.132759])
+plt.figure(1).axes[5].set_position([0.505208, 0.466381, 0.201231, 0.132759])
+plt.figure(1).axes[5].texts[0].set_position([1.144941, 0.492154])
+plt.figure(1).axes[6].set_position([0.125000, 0.307071, 0.201231, 0.132759])
+plt.figure(1).axes[6].texts[0].set_position([1.415412, -0.429585])
+plt.figure(1).axes[7].set_position([0.505208, 0.307071, 0.201231, 0.132759])
+plt.figure(1).axes[7].texts[0].set_position([1.144941, 0.492154])
+#% end: automatic generated code from pylustrator
+plt.show()

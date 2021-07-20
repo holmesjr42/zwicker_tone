@@ -73,10 +73,6 @@ def db_lv(data):
 # function for nnm plotting
 # function for nnm plotting
 def nnm_plot(aax, dats, imag, cm, type='octave', cf=0):
-    freq_list = []
-    for i in range(49):
-        freq_list.append(round(500 * 2 ** (i / 8))/1000)
-
 
     # aax.tick_params(axis='both', length=0.9, width=0.5)
     aax.spines['top'].set_visible(False)

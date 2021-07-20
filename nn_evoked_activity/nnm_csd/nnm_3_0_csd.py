@@ -1,13 +1,13 @@
 import os
 import sys
 
-sys.path.insert(1, os.path.dirname(os.getcwd()))
+sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
 # print(os.path.realpath(pathlib.Path('__init__.py').parent))
 # print(os.getcwd())
 from tools import icsd
 from tools import csd_tool as ct
 import numpy as np
-from parameters import parameters as pm
+from parameter import parameters as pm
 import h5py
 import matplotlib.pyplot as plt
 from matplotlib import colors

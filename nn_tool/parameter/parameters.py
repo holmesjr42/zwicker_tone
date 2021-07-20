@@ -7,7 +7,7 @@ import seaborn as sns
 
 file_path = '/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/'
 param_path = '/home/bhc/codes/zwicker_tone/nn_tool/parameter/'
-sr_lfp = 1061.5
+sr_lfp = 1061.48
 
 
 class Commonfeat:
@@ -253,9 +253,8 @@ class Setup:
 
 
 class Nn:
-    with open(param_path + 'nn_index.pk', 'rb') as a:
-        nn_i = pickle.load(a)
-
+    ind_3_1 = [np.arange(0, 180000 - 4000 + 1, 4000), np.arange(4000, 180000 + 1, 4000)]
+    ind_1_1 = [np.arange(0, 180000 - 2000 + 1, 2000), np.arange(2000, 180000 + 1, 2000)]
     def setup(self):
         names = [
             'nn_3_1', 'nn_wn_3_1', 'nn_1_1', 'nn_wn_1_1',

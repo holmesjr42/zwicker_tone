@@ -1,10 +1,11 @@
 import os
 import sys
 
-sys.path.insert(1, os.getcwd())
+sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
 
 import scipy.signal as scig
 import numpy as np
+import h5py
 # import spike_tools as st
 from parameter import parameters as pm
 import sys
@@ -13,23 +14,324 @@ from scipy import stats
 import statsmodels.stats.weightstats as sms
 from tools import icsd
 import neo.core
+
 sys.path.pop(1)
 
 # time index for notched noise. in[0] is the lower boundary and in[1] is
 # the higher boundary.
 
-in31 = pm.Nn.nn_i['nn31']
-in11 = pm.Nn.nn_i['nn11']
+cond = [['nn_3_1', 'nn_wn_3_1'], ['nn_1_1', 'nn_wn_1_1']]
+t_ind = [pm.Nn.ind_3_1, pm.Nn.ind_1_1]
 val = pm.Setup(cond='nnm_3_0', cond2='tsp', mode=1)
 crl = val.values()[7]
 sets = val.extra_setup()
 finx = [sets[3][1], sets[3][3]]
-sr_lfp = 1061.5 * pq.Hz  # lfp sampling rate
-
+sr_lfp = 1061.48 * pq.Hz  # lfp sampling rate
+bf_list = pm.Commonfeat.bf_dic
+lvs = ['70', '60']
+chs = 16  # num. of channels
+duration = 180000  # 3 min in ms
 # smoothing filter using hanning window
 filt = np.hanning(5)
 
 
+class OffsetPrepare:
+    def __init__(self, f_spk, f_lfp, condition):
+        """
+        :param f_spk: raw spk data file name(spike time arrays)
+        :param f_lfp: raw lfp data file name
+        :param condition: noise condition: 'nn'/'wn' & '3_1'/'1_1'  for offset response
+        """
+
+        # if "3_1" in condition:
+        #     cond_ind = 0
+        #     s_t = t_ind[cond_ind]
+        #     l_t = [lfp_index(t) for t in s_t]
+        #
+        # elif "1_1" in condition:
+        #     cond_ind = 1
+        #     s_t = t_ind[cond_ind]
+        #     l_t = [lfp_index(t) for t in s_t]
+
+        # else:
+        #     print('you did not choose condition type')
+        #     raise ValueError
+
+        # self.condition = condition
+        # self.cond_ind = cond_ind
+        # self.animal = f_spk.split('/')[-1].split('_')[0]
+        # self.bf = bf_list[self.animal]
+        # self.lv_ind = lvs.index(lv)
+        self.f_spk = f_spk  # spike data file name
+        self.f_lfp = f_lfp  # lfp data file name
+        self.condition = condition
+        self.mua = self.data_prepare()[0]
+        self.lfp = self.data_prepare()[1]
+        self.spk_segs = self.spk_psth()
+        self.lfp_segs = self.lfp_seg()
+        # self.s_t = s_t  # offset session ti, tf list
+        # self.l_t = l_t  # offset session ti, tf  list for lfp
+
+    def data_prepare(self):
+        """
+        This is to prepare filtered lfp and tsp data to generate mean, std, psth, rastor dataset later. Because
+        some files only have 70 dB data and others have 70, 60 dB or 70 -- 50 dB, I use iter and while loop to just
+        process SPL dB data which a sample has. If a sample does not have a certain condition data, it will return
+        len(lvs) x 16 (num. channel) x 180000 (3 min in ms) zero array for each mua and lfp.
+
+        ---extra parameters which you can't find in __init__------------------------------------------------------
+        lvs: the parameter I stored the SPL dB I'm going to use for the analysis.
+        dats: spike data for a certain condition
+        datl: lfp data for a certain condition
+        lfp_temp: temporary list to store channel data for a specific condition at specific SPL dB. I'm doing this
+        because the data from dataset cannot be converted to np array unless I use loop and create other data list which
+        contains channel data.
+        mua: MUA dataset with all SPL dB condition, which converted from time stamp to 1 ms bin spike count
+        LFP: lfp dataset with all SPL dB condition
+        """
+
+        with h5py.File(self.f_spk, 'r') as sd:
+
+            if self.condition in sd:
+                dats = sd[self.condition]
+                mua = []
+
+                i = iter(range(len(dats)))
+                while (ind_l := next(i, None)) is not None and ind_l < 2:
+                    mua.append(np.array(index_spike(dats[ind_l])))
+                mua = np.array(mua)
+                with h5py.File(self.f_lfp, 'r') as ld:
+                    lfp = []
+                    datl = ld[self.condition]
+
+                    i = iter(range(len(datl)))
+                    while (ind_l := next(i, None)) is not None and ind_l < 2:
+                        lfp_temp = []
+                        for j in range(len(datl[ind_l])):
+                            lfp_temp.append(datl[ind_l][j])
+                        lfp.append(np.array(lfp_temp))
+
+            elif self.condition not in sd:
+                mua = np.zeros([len(lvs), chs, duration])
+                lfp = np.zeros([len(lvs), chs, lfp_index(duration)])
+
+        return [mua, lfp]
+
+    def spk_psth(self):
+        """
+        ---extra parameters--------------------------------------------------------------------------------------------
+        :t_toal: total segment time duration e.g. 3s / 1s t_total = 4000 ms
+        :return n_raster: rastor dataset
+        :return n_psth: raw psth dataset
+        :return s_psth: smoothed psth dataset
+        :return t_n: time array
+        the unit of all the return is 1/s or s
+        """
+
+        if '3_1' in self.condition:
+            ind = t_ind[0]
+        elif '1_1' in self.condition:
+            ind = t_ind[1]
+        else:
+            print('somthing is wrong. check if you choose the right index type '
+                  'for nn condition.')
+            raise ValueError
+
+        t_total = ind[1][0]
+        t_n = np.arange(0, t_total + 1) * pq.ms
+        t_n.units = pq.s
+        n_raster = np.zeros([len(self.mua), 16, np.size(ind[0]), t_total + 1])
+
+        if np.any(self.mua[0]):
+            for k in range(len(self.mua)):
+                for i in range(chs):
+                    for j in range(np.size(ind[0])):
+                        # session of nn/wn  file with 4000/2000 ms/session
+                        n_raster[k][i][j] = self.mua[k][i][ind[0][j]:ind[1][j] + 1]
+        else:
+            pass
+
+        n_psth = np.mean(n_raster, axis=2) * (pq.ms ** -1)
+
+        n_psth.units = pq.s ** -1
+        s_psth = [[np.convolve(filt / filt.sum(), ch, mode='same') for ch in lv] for lv in n_psth] * (pq.s ** -1)
+
+        return [n_raster, n_psth, s_psth, t_n]
+
+    def lfp_seg(self):
+        """
+        function to divide 3 min lfp into 4 s or 2 s segments depending on 3 s / 1 s and 1 s/ 1 s conditions,
+        respectably.
+        :return: lfp segments data array
+        """
+        if '3_1' in self.condition:
+            ind = t_ind[0]
+        elif '1_1' in self.condition:
+            ind = t_ind[1]
+        else:
+            print('something is wrong with choosing time index.')
+            raise ValueError
+
+        t_total = ind[1][0]
+        t_total_lfp = lfp_index(ind[1][0])
+        l_ind = lfp_index(ind)
+        t_n = np.linspace(0, t_total + 1, t_total_lfp) * pq.ms
+        t_n.units = pq.s
+        lfp_segs = np.zeros([len(self.lfp), 16, np.size(ind[0]), t_total_lfp + 1])
+
+        if np.any(self.lfp[0]):
+            for k in range(len(self.lfp)):  # num of SPL dB arrays
+                for i in range(chs):  # number of channels
+                    for j in range(np.size(ind[0])):
+                        lfp_segs[k][i][j] = self.lfp[k][i][
+                                            l_ind[0][j].magnitude:t_total_lfp + l_ind[0][j].magnitude + 1
+                                            ]
+        else:
+            pass
+
+        lfp_segs = lfp_segs * pq.microvolt
+        lfp_segs.units = pq.mV
+        lfp_mean = np.mean(lfp_segs, axis=2)
+
+        return [lfp_segs, lfp_mean, t_n]
+
+
+def threshold(self):
+    if self.condition == '3_1':
+        tf = t_ind[0][1][0]
+        ti = tf - 1000
+        conds = cond[0]
+    elif '1_1' in self.condition:
+        tf = t_ind[1][1][0]
+        ti = tf - 1000
+        conds = cond[1]
+    else:
+        print('you did not choose which off condition you are going to use')
+        raise ValueError
+
+    ths = []
+    trf = [150, 50]  # time points to calculate reference session (so called spontaneous session) range
+
+    # test with raster-----------------if you want to test the difference between mean-segment threshold and single
+    # segment threshold, use this part with exemplary animal file
+    spk = self.spk_segs[0][0][0][1]
+    spk2 = spk[:, :, ti + trf[0]:tf - trf[1]]
+    print(np.shape(spk2))
+    spk3 = spk2.reshape(np.shape(spk2)[0], np.shape(spk2)[1] * np.shape(spk2)[2])
+    # -------------------------------------------------------------------------------------------------------------
+
+    # lfp = self.lfp_segs[0][0][0][0]
+
+    # lfp2 = lfp[:, :, ti + trf[0]:tf - trf[1]]
+    # print(np.shape(lfp2))
+    # lfp3 = lfp2.reshape(np.shape(lfp2)[0], np.shape(lfp2)[1] * np.shape(lfp2)[2])
+    # print(np.shape(lfp3))
+    # #
+    return spk2, spk3
+
+
+class Offset:
+
+    def __init__(self, data, file_name, condition, lv):
+        """
+        :param data: hdf5 dataset
+        :param file_name: file name of a sample e.g. 'cr31_190312_nn_mean.hdf5'
+        :param condition: which nn/wn condition you are using? e.g. nn_3_1, nn_wn_1_1
+        :param lv: SPL dB for noises e.g '70'
+        """
+        if condition == "3_1":
+            cond_ind = 0
+            s_t = [3000, 3150, 4000]
+            l_t = [lfp_index(t) for t in s_t]
+
+        elif condition == "1_1":
+            cond_ind = 1
+            s_t = [1000, 1150, 2000]
+            l_t = [lfp_index(t) for t in s_t]
+
+        else:
+            print('you did not choose condition type')
+            raise ValueError
+
+        self.condition = condition
+        self.cond_ind = cond_ind
+        self.animal = file_name.split('/')[-1].split('_')[0]
+        self.bf = bf_list[self.animal]
+        self.lv_ind = lvs.index(lv)
+        self.spk = data['spk']  # spike data
+        self.lfp = data['lfp']  # lfp data
+        self.s_t = s_t  # ti, tm (tf of offset response window), and tf of offset phase, spike
+        self.l_t = l_t  # ti, tm (tf of offset response window), and tf of offset phase, lfp
+
+    def threshold(self):
+        dat = ['raster', 'segments']  # dic key for spk and lfp to calculate threshold
+        conds = cond[self.cond_ind]
+        # dimension of raster/seg data before reshaping:
+        # (num. of lv, num. of channel, segments, 1 ms spike bin/ lfp amplitude)
+        s_raster = np.hstack((
+            self.spk[conds[0]][dat[0]][self.lv_ind][:, :, self.s_t[1]: self.s_t[2] - 50],
+            self.spk[conds[1]][dat[0]][self.lv_ind][:, :, self.s_t[1]: self.s_t[2] - 50]
+        ))
+        s_raster = s_raster.reshape((
+            np.shape(s_raster)[0], np.shape(s_raster)[1] * np.shape(s_raster)[2]
+        )) * (pq.ms ** -1)
+        s_raster.units = pq.s ** -1
+
+        l_seg = np.hstack((
+            self.lfp[conds[0]][dat[1]][self.lv_ind][:, :, self.l_t[1]: self.l_t[2] - 50],
+            self.lfp[conds[1]][dat[1]][self.lv_ind][:, :, self.l_t[1]: self.l_t[2] - 50]
+        ))
+
+        l_seg = l_seg.reshape((np.shape(l_seg)[0], np.shape(l_seg)[1] * np.shape(l_seg)[2]))
+
+        # threshold of spk and lfp
+        thrs = [
+            np.mean(s_raster, axis=1) + np.std(s_raster, axis=1),
+            np.mean(l_seg, axis=1) - 1 * np.std(l_seg, axis=1)
+        ]
+
+        return thrs
+
+    def threshold_alt(self):
+        dat = ['raster', 'segments']  # dic key for spk and lfp to calculate threshold
+        conds = cond[self.cond_ind]
+        # dimension of raster/seg data before reshaping:
+        # (num. of lv, num. of channel, segments, 1 ms spike bin/ lfp amplitude)
+        s_raster = np.hstack((
+            self.spk[conds[0]][dat[0]][self.lv_ind][:, :, self.s_t[1]: self.s_t[2] - 50],
+            self.spk[conds[1]][dat[0]][self.lv_ind][:, :, self.s_t[1]: self.s_t[2] - 50]
+        )) * (pq.ms ** -1)
+        s_raster.units = pq.s ** -1
+
+        l_seg = np.hstack((
+            self.lfp[conds[0]][dat[1]][self.lv_ind][:, :, self.l_t[1]: self.l_t[2] - 50],
+            self.lfp[conds[1]][dat[1]][self.lv_ind][:, :, self.l_t[1]: self.l_t[2] - 50]
+        )) * pq.microvolt
+
+        l_seg.units = pq.mV
+
+        # threshold of spk and lfp
+        s_seg_mean = np.mean(s_raster, axis=1)
+        l_seg_mean = np.mean(l_seg, axis=1)
+
+        thrs = [
+            np.mean(s_seg_mean, axis=1) + 6 * np.std(s_seg_mean, axis=1),
+            np.mean(l_seg_mean, axis=1) - 5 * np.std(l_seg_mean, axis=1)
+        ]
+        return thrs
+
+
+#     def offset_plot(self):
+#
+#         spk_threshold = self.spk_base[:, 0] + 2 * self.spk_base[:, 1]
+#         lfp_threshold = self.lfp_base[:, 0] - 1 * self.lfp_base[:, 1]
+#
+#         spk = self.spk['s_psth'][self.condition][self.lv_ind]
+#         lfp = self.lfp['mean'][self.condition][self.lv_ind]
+#
+#         return [spk, lfp, spk_threshold, lfp_threshold]
+#
+#
 def index_spike(tsp):
     """
     :param tsp: just raw spk data from tsp file
@@ -38,7 +340,7 @@ def index_spike(tsp):
     mua = []
 
     for i in range(16):
-        mua.append(np.zeros(181 * 1000 + 1))
+        mua.append(np.zeros(181 * 1000))
         for k in range(np.size(tsp[i])):
             k1 = int(np.round(1000 * tsp[i][k]))
             if k1 > 181 * 1000:
@@ -47,104 +349,13 @@ def index_spike(tsp):
                 mua[i][k1] = 1
     return mua
 
-def threshold_collect(data, ti, tf, t_off):
-    """
-    :param data: data of noise condition spikes with either 3/1 or 1/1 condition
-    :param ti: t_i list for a session
-    :param tf: tf list for a session
-    :param t_off: offset phase start point for each subsession
-    :return: mean and std of baseline to calculate threshold
-    """
-    ths = []
-    data = np.array(data)
-    trf = [150, 50]  # time points to calculate reference session range
-
-    for i in range(len(ti)):
-        t_i = ti[i] + t_off + trf[0]
-        t_f = tf[i] - trf[1]
-        ths.append(data[:, t_i:t_f])
-    base = np.concatenate(ths, axis=1)
-    return base
-
-
-def psth(mua, indt):
-    """
-    :param mua: spike train from index_spike
-    :param indt: type of index. depending on 3s/1s or 1s/1s on-off condition.
-    :return: n_raster: data array you can use for raster plot. each channel
-    has 4 s spike train with certain repetition ( 3s/1s # 45, 1s/1s # 90)
-             n_psth: data array for psth. It's the sum of all repetition.
-             s_psth: filtered data. Used convolution moving average, hanning
-                     window for smoothing and averaged with repetition number.
-             t_n: time array for generating plot.
-    """
-    n_raster = [[] for _ in range(16)]
-    n_psth = []
-    s_psth = []
-
-    if indt in ['nn_3_1', 'nn_wn_3_1', 'nn_3_1_nt', 'nn_wn_3_1_nt']:
-        ind = in31
-        t_n = np.arange(0, 4001)
-
-    elif indt in ['nn_1_1', 'nn_wn_1_1', 'nn_1_1_nt', 'nn_wn_1_1_nt']:
-        ind = in11
-        t_n = np.arange(0, 2001)
-
-    else:
-        print('somthing is wrong. check if you choose the right index type '
-              'for nn condition.')
-        sys.exit()
-
-    rep = np.size(ind[0])
-
-    for i in range(16):
-        n_raster[i] = []
-
-        for j in range(rep):
-            # session of nn/wn  file with 4000/2000 ms/session
-            n_raster[i].append(mua[i][ind[0][j]:ind[1][j] + 1])
-
-        sums = np.sum(n_raster[i], axis=0) / rep
-        n_psth.append(sums)
-        s_psth.append(np.convolve(filt / filt.sum(), n_psth[i],
-                                  mode='same'))
-
-    n_psth = n_psth * pq.ms ** (-1)
-    n_psth.units = pq.s ** (-1)
-
-    s_psth = s_psth * pq.ms ** (-1)
-    s_psth.units = pq.s ** (-1)
-
-    return n_raster, n_psth, s_psth, t_n
-
-
-def lfp_seg(lfp, indt):
-    l_seg = [[] for _ in range(16)]
-    rep = 0
-
-    if indt in ['nn_3_1', 'nn_wn_3_1', 'nn_3_1_nt', 'nn_wn_3_1_nt']:
-        ind = in31
-
-    elif indt in ['nn_1_1', 'nn_wn_1_1', 'nn_1_1_nt', 'nn_wn_1_1_nt']:
-        ind = in11
-    else:
-        print('something is wrong with choosing time index.')
-        sys.exit()
-
-    rep = np.size(ind[0])
-    ind_l = ind[0] * (sr_lfp / 1000)
-    ind_h = (ind[1] + 101) * (sr_lfp / 1000)
-    for i in range(16):  # number of channels
-        d_lfp = lfp[i] * pq.microvolt
-        d_lfp.units = pq.mV
-        for j in range(rep):
-            l_seg[i].append(d_lfp[np.int(ind_l[j]): np.int(ind_h[j])])
-    return l_seg
-
 
 def lfp_index(t):
-    inds = np.int(np.round(t * (sr_lfp / 1000)))
+    t = t * pq.ms
+    t.units = pq.s
+    inds = np.int64(np.round(t * sr_lfp))
     return inds
+
 
 def lfp_index_nnm(t1, t2=0, types=0):
     sr = sr_lfp / pq.Hz
@@ -155,11 +366,12 @@ def lfp_index_nnm(t1, t2=0, types=0):
 
         inds = int(np.round(
             t1 * (sr / 1000) + int((t2 * sr / 1000))
-            ))
+        ))
     else:
         print("you didn't choose the right types")
         raise
     return inds
+
 
 def m_spectro(l_seg):
     """
@@ -271,7 +483,7 @@ def lfp_plot(ax, t, lfp, conf, xticks, yticks, c_type):
         conf1[0],
         conf1[1],
         alpha=.2
-        )
+    )
     ax.set_yticks(yticks)
     ax.set_xticks(xticks)
 
@@ -448,7 +660,7 @@ def diff(data, layer, lv, cn, cs, ind=None, bdata=None, types='spk',
                 tembn = bdata[cn][layer][lv]
                 tempr.append(
                     p_to_p(tempc[ani], tempn[ani], tembc[ani], tembn[ani], ind)
-                    )
+                )
             else:
                 print("you forgot to indicate which kind of data it is")
                 raise ValueError
@@ -473,7 +685,7 @@ def diff(data, layer, lv, cn, cs, ind=None, bdata=None, types='spk',
                 tempr.append(
                     (tempn[ani][fm[ani]] - tempc[ani][fm[ani]])
                     / tempc[ani][fm[ani]]
-                    )
+                )
 
         elif types == 'lfp':
             for ani in range(len(tempn)):
@@ -485,7 +697,7 @@ def diff(data, layer, lv, cn, cs, ind=None, bdata=None, types='spk',
                 tempr.append(
                     p_to_p(tempc[ani], tempn[ani], tembc[ani],
                            tembn[ani], fm[ani])
-                    )
+                )
         else:
             print("you forgot to indicate which kind of data it is")
             raise ValueError
@@ -530,7 +742,7 @@ def diff_on_off(data, layer, lv, cn, cs, cnon, bdata=None, types='spk'):
             tempr.append(
                 (tempn[ani][fm[ani]] - tempc[ani][fm[ani]])
                 / tempc[ani][fm[ani]]
-                )
+            )
     elif types == 'lfp':
         for ani in range(len(dnon)):
             fm.append(freq_find(dnon[ani], find, type='lfp'))
@@ -541,7 +753,7 @@ def diff_on_off(data, layer, lv, cn, cs, cnon, bdata=None, types='spk'):
             tempr.append(
                 p_to_p(tempc[ani], tempn[ani], tembc[ani],
                        tembn[ani], fm[ani])
-                )
+            )
     else:
         print("you forgot to indicate which kind of data it is")
         raise ValueError
@@ -568,7 +780,7 @@ def layer_average(data, layer_number):
         data[layer_number[0][0]:layer_number[0][1]],
         data[layer_number[1][0]:layer_number[1][1]],
         data[layer_number[2][0]:layer_number[2][1]]
-        ]
+    ]
     l_average = [
         np.mean(layer[0], axis=0),
         np.mean(layer[1], axis=0),
@@ -676,7 +888,7 @@ def nn_csd(data):
         'sigma': sigma,
         'f_type': 'gaussian',
         'f_order': (3, 1)
-        }
+    }
 
     fil_csd = icsd.estimate_csd(**lfp_input)[1]
     csd = np.transpose(fil_csd / fil_csd.units) * fil_csd.units

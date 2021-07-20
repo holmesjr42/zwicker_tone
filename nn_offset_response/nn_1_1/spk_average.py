@@ -1,12 +1,12 @@
 import os
 import sys
 
-sys.path.insert(1, os.path.dirname(os.getcwd()))
+sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
 
 import numpy as np
 import h5py
 from tools import nn_tool as nt
-from parameters import parameters as pm
+from parameter import parameters as pm
 import matplotlib.pyplot as plt
 import pickle
 import quantities as pq
@@ -26,7 +26,7 @@ cb = val.values()[-2]
 dcmap = val.values()[7]
 names = ['nn_1_1', 'nn_wn_1_1']
 legends = ['NN', 'WN']
-ch_l = [0, 7, 11]  # channel number
+ch_l = [0, 8, 12]  # channel number
 depth = [100, 800, 1200]
 l_list = ['supr', 'gran', 'infr']  # list of layers
 layer_name = ['Supragranular\nLayer', 'Granular\nLayer',

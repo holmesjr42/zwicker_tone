@@ -2,20 +2,87 @@ NAMES = [
     'cr31_190312', 'cr33_190321', 'cr50_190724', 'cr79_200211', 'cr90_201023', 'cr92_201029', 'cr93_201110', 'cr94_201112',  'cr95_201117', 'cr96_201119', 'cr98_201203', 'cr101_201211', 'cr102_201214', 'cr103_201215'
         ]
 
+NAMES2 = [
+    'cr50_190724', 'cr79_200211', 'cr90_201023', 'cr92_201029', 'cr93_201110', 'cr94_201112',  'cr95_201117', 'cr96_201119', 'cr98_201203', 'cr101_201211', 'cr102_201214', 'cr103_201215'
+        ]
+
+NAMES3 = [
+    'cr31_190312', 'cr33_190321', 'cr50_190724', 'cr79_200211', 'cr90_201023', 'cr92_201029', 'cr93_201110', 'cr94_201112',  'cr95_201117', 'cr96_201119', 'cr98_201203', 'cr101_201211', 'cr102_201214'
+        ]
+
+NAMES4 = [
+    'cr50_190724', 'cr79_200211', 'cr90_201023', 'cr92_201029', 'cr93_201110', 'cr94_201112',  'cr95_201117', 'cr96_201119', 'cr98_201203', 'cr101_201211', 'cr102_201214'
+        ]
+
+
 import os
-path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))))
+# path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))))
+path = "/home/bhc"
 
 rule all:
     input:
-         path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/offset_mean_std_threshold.hdf5"
+         expand(path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/dataset/{name}_offset.hdf5", name=NAMES),
+         expand(path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/examples/3_1_70/spk/{name}_3_1_70_offset_spk.png", name=NAMES),
+         expand(path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/examples/3_1_70/lfp/{name}_3_1_70_offset_lfp.png", name=NAMES),
+         expand(path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/examples/3_1_60/spk/{name}_3_1_60_offset_spk.png", name=NAMES2),
+         expand(path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/examples/3_1_60/lfp/{name}_3_1_60_offset_lfp.png", name=NAMES2),
+         expand(path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/examples/1_1_70/spk/{name}_1_1_70_offset_spk.png", name=NAMES3),
+         expand(path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/examples/1_1_70/lfp/{name}_1_1_70_offset_lfp.png", name=NAMES3),
+         expand(path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/examples/1_1_60/spk/{name}_1_1_60_offset_spk.png", name=NAMES4),
+         expand(path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/examples/1_1_60/lfp/{name}_1_1_60_offset_lfp.png", name=NAMES4)
 
-rule threshold:
+
+rule dataset:
     input:
-        spk = expand(path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/{name}_tsp.hdf5", name=NAMES),
-        lfp = expand(path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/{name}_lfp_fil.hdf5", name=NAMES)
+        spk = path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/{name}_tsp.hdf5",
+        lfp = path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfp_fil/{name}_lfp_fil.hdf5"
         
     output:
-        path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/offset_mean_std_threshold.hdf5"
+        path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/dataset/{name}_offset.hdf5"
 
     script:
-         path + "/codes/zwicker_tone/nn_offset_response/threshold/threshold.py"
+         path + "/codes/zwicker_tone/nn_offset_response/prepare/data_create.py"
+
+rule nn_3_1_70:
+    input:
+        data = path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/dataset/{name}_offset.hdf5",
+
+    output:
+        path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/examples/3_1_70/spk/{name}_3_1_70_offset_spk.png",
+        path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/examples/3_1_70/lfp/{name}_3_1_70_offset_lfp.png"
+    
+    script:
+        path + "/codes/zwicker_tone/nn_offset_response/prepare/plot_3_1_70.py"
+
+rule nn_3_1_60:
+    input:
+        data = path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/dataset/{name}_offset.hdf5",
+
+    output:
+        path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/examples/3_1_60/spk/{name}_3_1_60_offset_spk.png",
+        path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/examples/3_1_60/lfp/{name}_3_1_60_offset_lfp.png"
+    
+    script:
+        path + "/codes/zwicker_tone/nn_offset_response/prepare/plot_3_1_60.py"
+
+rule nn_1_1_70:
+    input:
+        data = path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/dataset/{name}_offset.hdf5",
+
+    output:
+        path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/examples/1_1_70/spk/{name}_1_1_70_offset_spk.png",
+        path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/examples/1_1_70/lfp/{name}_1_1_70_offset_lfp.png"
+    
+    script:
+        path + "/codes/zwicker_tone/nn_offset_response/prepare/plot_1_1_70.py"
+
+rule nn_1_1_60:
+    input:
+        data = path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/dataset/{name}_offset.hdf5",
+
+    output:
+        path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/examples/1_1_60/spk/{name}_1_1_60_offset_spk.png",
+        path + "/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/offset_data/examples/1_1_60/lfp/{name}_1_1_60_offset_lfp.png"
+    
+    script:
+        path + "/codes/zwicker_tone/nn_offset_response/prepare/plot_1_1_60.py"
