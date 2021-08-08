@@ -81,8 +81,8 @@ with h5py.File(file_input, 'r') as dat:
             d_test = [
                 lp[0][ly][lv], lp[1][ly][lv], lp[2][ly][lv], lp[3][ly][lv]
                 ]
-            test = nt.fp_friedman(d_test, fm)
-            stat[ly][lv] = test
+            # test = nt.fp_friedman(d_test, fm)
+            # stat[ly][lv] = test
 
 
 # plot start
@@ -97,7 +97,7 @@ lim_tick = [[-0.20, 0.001, 0.05], [-0.12, 0.01, 0.04], [-0.08, 0.001, 0.02]]
 for i in range(len(lvl)):
     for j in range(len(l_list)):
         data = lfp[j][i]
-        stat2 = stat[l_list[j]][lvl[i]]
+        # stat2 = stat[l_list[j]][lvl[i]]
         s_axs[j, i].axvspan(-0.5, 0.5, alpha=0.3, color='#bccbe3', zorder=0)
 
         s_axs[j, i].plot(np.linspace(-1.5, 1.5, 25, endpoint=True),
@@ -123,15 +123,15 @@ for i in range(len(lvl)):
 
         s_axs[j, i].set_xticks([-1.5, -0.5, 0, 0.5, 1.5])
 
-        if stat2[1] < 0.05:
-            x = stat2[0]
-            s_axs[j, i].scatter(
-                octs[x],
-                np.min([
-                    data[0][x], data[1][x], data[2][x], data[3][x]
-                    ]) - lim_tick[j][2] * 0.5,
-                marker=(5, 2), color=c_as, zorder=5
-                                )
+        # if stat2[1] < 0.05:
+        #     x = stat2[0]
+        #     s_axs[j, i].scatter(
+        #         octs[x],
+        #         np.min([
+        #             data[0][x], data[1][x], data[2][x], data[3][x]
+        #             ]) - lim_tick[j][2] * 0.5,
+        #         marker=(5, 2), color=c_as, zorder=5
+        #                         )
 
 
         s_axs[j, i].set_ylim([lim_min[j][0], lim_min[j][1]])

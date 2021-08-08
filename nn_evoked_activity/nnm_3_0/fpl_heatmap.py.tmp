@@ -1,11 +1,12 @@
 import os
 import sys
 
-print(os.path.dirname(os.getcwd()))
-sys.path.insert(1, os.path.dirname(os.getcwd()))
+
+sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
+print(sys.path)
 import numpy as np
 import matplotlib.pyplot as plt
-from parameters import parameters as pm
+from parameter import parameters as pm
 import h5py
 from tools import nnm_plot as nnmp
 import pylustrator
@@ -25,11 +26,14 @@ nns = pm.Nnsifeat
 com = pm.Commonfeat
 
 # some setups for plotting e.g. color scheme
-val = pm.Setup(cond='nnm_3_0', cond2='lfp', mode=1, ccmap='lfp')
-mode, ylc, condc, condt, nb, ch, depth, dcmap, ws, hs, rt, cct, cb, ccmap = \
-    val.values()
+# val = pm.Setup(cond='nnm_3_0', cond2='lfp', mode=1, ccmap='lfp')
+# mode, ylc, condc, condt, nb, ch, depth, dcmap, ws, hs, rt, cct, cb, ccmap = \
+#     val.values()
+param = pm.Setup(hcmap_mode='lfp', mode='fun')  # parameters for plot setting
+ccmap = param.hcmap
+lcolor = param.ref_line_color
 lvl = com.db['lv']  # SPLdB list
-sets = val.extra_setup()
+
 
 file_input = '/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021' \
              '/data/dataset/nnm_spk_lfp_avg/all_spk_lfp_avg_nnm.hdf5'
@@ -39,8 +43,9 @@ file_input = '/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021' \
 animal = nnmp.animal_name(file_input)
 
 # stimulus conditions for this script
-c_n = sets[7][0]
-c_s = sets[8][0]
+c_n = param.c_n[0]
+c_s = param.c_s[0]
+
 lfp = {}  # dict for spk data regarding SPLdB
 
 # load file
@@ -68,8 +73,8 @@ title = ['Control', 'NN']  # title of plots
 for i in range(len(lvp)):
     data = lfp[lvp[i]]
     axes = [s_axs[row[i], col[i]], s_axs[row[i], col[i] + 1]]
-    nnmp.fph_plot(axes[0], data[0], s_img, ccmap)
-    nnmp.fph_plot(axes[1], data[1], s_img, ccmap)
+    nnmp.fph_plot(axes[0], data[0], s_img, ccmap, line_color=lcolor)
+    nnmp.fph_plot(axes[1], data[1], s_img, ccmap, line_color=lcolor)
     axes[1].axes.yaxis.set_ticklabels([])
 
     if row[i] == 0:
@@ -83,7 +88,7 @@ for i in range(len(lvp)):
             axes[j].set_title(title[j], fontdict={'fontsize': 20})
 
     # SPL dB
-    axes[0].text(0, 0, f'{lvp[i]} dB',
+    axes[0].text(1, 1, f'{lvp[i]} dB',
                  horizontalalignment='center',
                  verticalalignment='center',
                  # rotation='vertical',
@@ -108,51 +113,28 @@ s_axs[0, 0].text(0, 0, 'octaves',
                  fontdict={'weight': 'bold', 'size': 23}
                  )
 
-nnmp.norm_color(s_img, 'lfp', 0.8)
+mn, mx = nnmp.norm_color(s_img, 'lfp', 0.8)
 
 # colorbar setup
-mn = np.round(0.8 * min(ims.get_array().min() for ims in s_img), decimals=2)
 
-for i in range(len(lvp)):
-    axes = [s_axs[row[i], col[i]], s_axs[row[i], col[i] + 1]]
-    for j in range(len(axes)):
-        cbar = nnmp.colorbar_set(s_fig, axes[j], lvp[i], mn, s_img[i], 'lfp')
+cbaxes = s_fig.add_axes([0.8, 0.1, 0.01, 0.299517])
+
+cbar = nnmp.colorbar_set(s_fig, cbaxes, s_img[0], 'lfp', vmax=mx, vmin=mn)
 
 #% start: automatic generated code from pylustrator
 plt.figure(0).ax_dict = {ax.get_label(): ax for ax in plt.figure(0).axes}
 import matplotlib as mpl
-plt.figure(0).ax_dict["<colorbar>"].set_position([0.881126, 0.133500, 0.019990, 0.710773])
-plt.figure(0).ax_dict["<colorbar>"].set_position([0.884350, 0.133500, 0.019991, 0.710775])
-plt.figure(0).ax_dict["<colorbar>"].set_visible(False)
-plt.figure(0).ax_dict["<colorbar>"].set_visible(False)
-plt.figure(0).ax_dict["<colorbar>"].set_visible(False)
-plt.figure(0).ax_dict["<colorbar>"].set_visible(False)
-plt.figure(0).ax_dict["<colorbar>"].set_visible(False)
-plt.figure(0).ax_dict["<colorbar>"].set_visible(False)
-plt.figure(0).ax_dict["<colorbar>"].set_visible(False)
-plt.figure(0).ax_dict["<colorbar>"].yaxis.labelpad = 7.520000
-plt.figure(0).ax_dict["<colorbar>"].get_yaxis().get_label().set_position([1409.100000, 0.500013])
-plt.figure(0).axes[0].set_position([0.141250, 0.565725, 0.156685, 0.278551])
-plt.figure(0).axes[0].texts[0].set_position([1.140825, 1.264472])
-plt.figure(0).axes[0].texts[1].set_position([-0.398891, -0.275234])
-plt.figure(0).axes[0].texts[2].set_position([-1.368193, -0.291190])
-plt.figure(0).axes[1].set_position([0.310300, 0.565722, 0.156685, 0.278551])
-plt.figure(0).axes[2].set_position([0.546850, 0.565722, 0.156685, 0.278551])
-plt.figure(0).axes[2].texts[0].set_position([1.037113, 1.264470])
-plt.figure(0).axes[3].set_position([0.715600, 0.565722, 0.156685, 0.278551])
-plt.figure(0).axes[4].set_position([0.141250, 0.133500, 0.156685, 0.278551])
-plt.figure(0).axes[4].texts[0].set_position([1.140825, 1.204639])
-plt.figure(0).axes[5].set_position([0.310000, 0.133500, 0.156685, 0.278551])
-plt.figure(0).axes[6].set_position([0.546850, 0.133500, 0.156685, 0.278551])
-plt.figure(0).axes[6].texts[0].set_position([1.037113, 1.204646])
-plt.figure(0).axes[7].set_position([0.715600, 0.133500, 0.156685, 0.278551])
+plt.figure(0).axes[0].texts[0].set_position([1.000000, 1.192903])
+plt.figure(0).axes[0].texts[1].set_position([-0.426613, -0.189194])
+plt.figure(0).axes[0].texts[2].set_position([-1.272419, -0.248548])
+plt.figure(0).axes[1].set_position([0.305924, 0.555242, 0.168478, 0.299517])
+plt.figure(0).axes[2].set_position([0.550598, 0.555242, 0.168478, 0.299517])
+plt.figure(0).axes[2].texts[0].set_position([0.999492, 1.193612])
+plt.figure(0).axes[4].texts[0].set_position([1.000000, 1.085323])
+plt.figure(0).axes[5].set_position([0.305924, 0.135242, 0.168478, 0.299517])
+plt.figure(0).axes[6].set_position([0.550598, 0.135242, 0.168478, 0.299517])
+plt.figure(0).axes[6].texts[0].set_position([0.999492, 1.085535])
+plt.figure(0).axes[7].set_position([0.731522, 0.135242, 0.168478, 0.299517])
+plt.figure(0).axes[8].set_position([0.904375, 0.135241, 0.010000, 0.299517])
 #% end: automatic generated code from pylustrator
 plt.show()
-
-# axs.text(1.3, 1.5, f'{lv} SPL dB',
-#          horizontalalignment='center',
-#          verticalalignment='center',
-#          # rotation='vertical',
-#          transform=axs[lv][0, 0].transAxes,
-#          fontdict={'weight': 'bold', 'size': 11}
-#          )

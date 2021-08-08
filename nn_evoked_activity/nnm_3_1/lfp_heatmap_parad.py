@@ -2,10 +2,10 @@ import os
 import sys
 
 print(os.path.dirname(os.getcwd()))
-sys.path.insert(1, os.path.dirname(os.getcwd()))
+sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
 import numpy as np
 import matplotlib.pyplot as plt
-from parameters import parameters as pm
+from parameter import parameters as pm
 import h5py
 from tools import nnm_plot as nnmp
 import pylustrator
@@ -109,13 +109,13 @@ s_axs[3, 0].text(0, 0, 'time (ms)',
                  fontdict={'weight': 'bold', 'size': 30}
                  )
 
-mx = nnmp.norm_color(s_img, 'lfp', 0.8)
+mn, mx = nnmp.norm_color(s_img, 'lfp', 0.8)
 
 # colorbar setup
 for i in range(len(lvp)):
     axes = [s_axs[i, 0], s_axs[i, 1]]
     for j in range(len(axes)):
-        cbar = nnmp.colorbar_set(s_fig, axes[j], mx, s_img[i], 'lfp')
+        cbar = nnmp.colorbar_set(s_fig, axes[j], s_img[i], 'lfp', vmax=mx, vmin=mn)
 
 #% start: automatic generated code from pylustrator
 plt.figure(0).ax_dict = {ax.get_label(): ax for ax in plt.figure(0).axes}

@@ -4,16 +4,10 @@ import sys
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
 
 import numpy as np
-import pickle
 import matplotlib.pyplot as plt
-from matplotlib import colors
-from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-from matplotlib import ticker
-import matplotlib.image as mpimg
 from parameter import parameters as pm
 import seaborn as sns
 import h5py
-from matplotlib.colors import ListedColormap
 from tools import nnm_plot as nnmp
 import pylustrator
 import quantities as pq

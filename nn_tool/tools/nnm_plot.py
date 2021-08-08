@@ -4,15 +4,10 @@ import sys
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
 
 import numpy as np
-import pickle
 import matplotlib.pyplot as plt
 from matplotlib import colors
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-from matplotlib import ticker
 from parameter import parameters as pm
-import seaborn as sns
-import h5py
-from matplotlib.colors import ListedColormap
 from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
 from mpl_toolkits.axes_grid1.inset_locator import mark_inset
 import quantities as pq
@@ -26,11 +21,6 @@ sr_lfp = 1061.5 * pq.Hz
 coord = np.arange(0, 1501, 100) * pq.micrometer
 sigma = 1 / (100 * pq.micrometer)
 
-val = pm.Setup(cond='nnm_3_0', cond2='tsp', mode=1, ccmap='csd')
-val2 = pm.Setup(cond='nnm_3_0', cond2='tsp', mode=1, ccmap='lfp')
-
-ccmap = val.values()[-1]
-lcmap = val2.values()[-1]
 
 def animal_name(file_input):
     name = file_input.split('/')[-1].split('_')[0]
@@ -72,8 +62,7 @@ def db_lv(data):
 
 # function for nnm plotting
 # function for nnm plotting
-def nnm_plot(aax, dats, imag, cm, type='octave', cf=0):
-
+def nnm_plot(aax, dats, imag, cm, types='octave', cf=0):
     # aax.tick_params(axis='both', length=0.9, width=0.5)
     aax.spines['top'].set_visible(False)
     aax.spines['right'].set_visible(False)
@@ -86,7 +75,7 @@ def nnm_plot(aax, dats, imag, cm, type='octave', cf=0):
     for tick in aax.get_yticklabels():
         tick.set_fontname('sans-serif')
 
-    if type == 'octave':
+    if types == 'octave':
         aax.tick_params(axis='both', which='major', labelsize=18, length=6,
                         width=1.5)
         aax.tick_params(axis='both', which='minor', labelsize=10, length=4,
@@ -132,6 +121,7 @@ def nnm_plot(aax, dats, imag, cm, type='octave', cf=0):
         aax.set_yticklabels([0.5, 1, 2, 4, 8, 16, 32])
         # aax.set_yticks([-1., 0., 1.])
 
+
 def csd_plot(zz, ax, image, cm):
     zz = zz / zz.units
     sig = zz
@@ -160,6 +150,7 @@ def csd_plot(zz, ax, image, cm):
     ax.tick_params(axis='x', which='major', labelsize=9)
     ax.tick_params(axis='y', which='major', labelsize=9)
 
+
 # axins = inset_axes(aax,
 #                    width="5%",  # width = 5% of parent_bbox width
 #                    height="100%",  # height : 50%
@@ -173,7 +164,7 @@ def csd_plot(zz, ax, image, cm):
 
 
 # function for frequency profile heatmap
-def fph_plot(aax, dats, imag, cm):
+def fph_plot(aax, dats, image_list, cm, line_color='white'):
     aax.tick_params(axis='both', which='major', labelsize=18, length=6,
                     width=1.5)
     aax.tick_params(axis='both', which='minor', labelsize=10, length=4,
@@ -195,13 +186,13 @@ def fph_plot(aax, dats, imag, cm):
     img = aax.imshow(
         dats, cmap=cm, aspect=3 / 1500,
         extent=[-1.5, 1.5, 1500, 0], interpolation='gaussian')
-    imag.append(img)
+    image_list.append(img)
 
     # notch line
     for p in [-0.5, 0.5]:
-        aax.axvline(x=p, color='white', linestyle='-.', lw=1)
+        aax.axvline(x=p, color=line_color, linestyle='-.', lw=1)
     for d in l_depth:
-        aax.axhline(y=d, color='white', linestyle='--', lw=1)
+        aax.axhline(y=d, color=line_color, linestyle='--', lw=1)
     # plt.subplots_adjust(wspace=.001)
     aax.set_yticks(np.linspace(0, 1500, 16, endpoint=True), minor=True)
     aax.set_yticks(tick_d)
@@ -220,8 +211,9 @@ def fph_plot(aax, dats, imag, cm):
     # aax.label_outer()
     # return aax, axins
 
+
 # function for time depth with a specific frequency heatmap
-def tdh_plot(aax, dats, imag, cm, hc='white'):
+def tdh_plot(aax, dats, image_list, cm, hc='white'):
     aax.tick_params(axis='both', which='major', labelsize=16, length=6,
                     width=1.5)
     aax.tick_params(axis='both', which='minor', labelsize=10, length=4,
@@ -242,8 +234,8 @@ def tdh_plot(aax, dats, imag, cm, hc='white'):
     img = aax.imshow(
         dats, cmap=cm, aspect=101 / 1500, extent=[0, 101, 1500, 0],
         interpolation='gaussian'
-        )
-    imag.append(img)
+    )
+    image_list.append(img)
 
     # layer IV line
     for d in l_depth:
@@ -257,19 +249,19 @@ def tdh_plot(aax, dats, imag, cm, hc='white'):
 
 
 # unit of a heatmap bar
-def cbar_t(cbar, type):
+def cbar_t(cbar, types):
     cbar.ax.tick_params(labelsize=7)
-    if type == 'lfp':
+    if types == 'lfp':
         cbar.set_label(
             r'mV',
             labelpad=15, size=9
-            )
+        )
 
-    elif type == 'tsp':
+    elif types == 'tsp':
         cbar.set_label(
             r'% Firing rate',
             labelpad=15, size=9
-            )
+        )
 
 
 # normalize the heatmap
@@ -289,7 +281,7 @@ def norm_color(img, types, ratio):
         #     )
         vmin = np.round(
             min(ims.get_array().min() for ims in img) * ratio, decimals=2
-            )
+        )
         vmax = -vmin
         norm = colors.TwoSlopeNorm(vcenter=0, vmin=vmin, vmax=vmax)
 
@@ -297,7 +289,7 @@ def norm_color(img, types, ratio):
         vmin = 0
         vmax = np.round(
             max(ims.get_array().max() for ims in img) * ratio, decimals=-1
-            )
+        )
         print(vmax)
         norm = colors.Normalize(vmin=vmin, vmax=vmax)
 
@@ -305,17 +297,17 @@ def norm_color(img, types, ratio):
         vmax = max(
             max(ims.get_array().max() for ims in img),
             np.abs(min(ims.get_array().min() for ims in img))
-            ) * ratio
+        ) * ratio
         vmin = (-1) * vmax
         norm = colors.Normalize(vmin=vmin, vmax=vmax)
 
     elif types == 'd_spk':
         mx = np.round(
             max(ims.get_array().max() for ims in img) * ratio, decimals=-1
-            )
+        )
         mn = np.round(
             min(ims.get_array().min() for ims in img) * ratio, decimals=-1
-            )
+        )
         vmax = np.max([np.abs(mx), np.abs(mn)])
         vmin = -vmax
         norm = colors.TwoSlopeNorm(vcenter=0, vmin=vmin, vmax=vmax)
@@ -323,10 +315,10 @@ def norm_color(img, types, ratio):
     elif types == 'd_lfp':
         mx = np.round(
             max(ims.get_array().max() for ims in img) * ratio, decimals=2
-            )
+        )
         mn = np.round(
             min(ims.get_array().min() for ims in img) * ratio, decimals=2
-            )
+        )
         vmax = np.max([np.abs(mx), np.abs(mn)])
         vmin = -vmax
         norm = colors.TwoSlopeNorm(vcenter=0, vmin=vmin, vmax=vmax)
@@ -390,67 +382,71 @@ def colorbar_set(fig, axs, img, types, vmax=0, vmin=0, ori='vertical'):
     This is a function for minor colorbar setups
     :param fig: name of the main figure (e.g. c1_fig)
     :param axs: column / row of a subplot
-    :param vmax: the maximum of the colorbar
+    :param vmax: the maximum of the colorbar range
+    :param vmin: the minimum of the colorbar range
     # :param lvi: the first element of lvp. Just to pick the coordination of
     fig text
     :param img: img list for current loop heatmap setups. Check c_img or l_img
     from nnm_*_sp_lfp script
-    :param types: the type of the data. Either 'lfp' or 'tsp'
-    :return:
+    :param types: the type of the data: 'lfp', 'spk', 'csd', 'd_spk', and 'd_lfp'. 'd_spk' and 'd_lfp" are differences
+                 between control and noise condition
+    :param ori: orientation of colorbar: 'vertical' or 'horizontal'
+
+    :return: colorbar update
     """
     if types == 'lfp':
         ticklist = [vmin, 0, vmax]
         cbart = fig.colorbar(
-            img, ax=axs,
+            img, cax=axs,
             orientation=ori,
             format='%.2f',
             fraction=0.02,
             ticks=ticklist
-            )
-        cbart.set_label('Amplitude ' + r'(mV)', labelpad=5, size=18)
+        )
+        cbart.set_label('Voltage ' + r'(mV)', labelpad=5, size=18)
 
     elif types == 'spk':
         ticklist = np.linspace(0, vmax, 3, endpoint=True)
         cbart = fig.colorbar(
-            img, ax=axs,
+            img, cax=axs,
             orientation=ori,
             format='%.0f',
             fraction=0.02,
             ticks=ticklist
-            )
+        )
         cbart.set_label('Firing rate (spk / s)', labelpad=5, size=18)
 
     elif types == 'csd':
         ticklist = [vmin, 0, vmax]
         cbart = fig.colorbar(
-            img, ax=axs,
+            img, cax=axs,
             orientation=ori,
             format='%.1f',
             fraction=0.02,
             ticks=ticklist
-            )
+        )
         cbart.set_label(r'mV/$mm^{2}$', labelpad=5, size=18)
 
     elif types == 'd_spk':
         ticklist = [vmin, 0, vmax]
         cbart = fig.colorbar(
-            img, ax=axs,
+            img, cax=axs,
             orientation=ori,
             format='%.0f',
             fraction=0.02,
             ticks=ticklist
-            )
+        )
         cbart.set_label('Firing rate (spk / s)', labelpad=5, size=18)
 
     elif types == 'd_lfp':
         ticklist = [vmin, 0, vmax]
         cbart = fig.colorbar(
-            img, ax=axs,
+            img, cax=axs,
             orientation=ori,
             format='%.2f',
             fraction=0.02,
             ticks=ticklist
-            )
+        )
         cbart.set_label('Amplitude ' + r'(mV)', labelpad=5, size=18)
 
     else:
@@ -460,6 +456,7 @@ def colorbar_set(fig, axs, img, types, vmax=0, vmin=0, ori='vertical'):
     cbart.ax.tick_params(labelsize=18)
     cbart.update_ticks()
 
+
 def csd_calc(x, f_type, f_order):
     std_input = {
         'lfp': x,
@@ -467,7 +464,7 @@ def csd_calc(x, f_type, f_order):
         'sigma': sigma,
         'f_type': f_type,
         'f_order': f_order
-        }
+    }
 
     std = icsd.estimate_csd(**std_input)
 
@@ -476,15 +473,23 @@ def csd_calc(x, f_type, f_order):
     # print(f'unit conversion {std[1].units} to {f_csd.units}')
     return f_csd
 
-def heat_plot(x, axs, img, type='lfp', zoom='no', z_range=None, z_img=None):
-    if type == 'lfp':
-        clmap = lcmap
-        hcolor = 'white'
-    elif type == 'csd':
-        clmap = ccmap
-        hcolor = 'k'
-    else:
-        raise ValueError("you didn't choose which data type you are plotting.")
+
+def heat_plot(x, axs, img, zoom='no', z_range=None, z_img=None, clmap=None, hcolor=None):
+    """
+
+    :param x: data array
+    :param axs: coordination of a subplot
+    :param img: list to store img information to do normalization later
+    :param zoom: option for zooming a part of the plot
+    :param z_range: zooming coordination
+    :param z_img: zooming part img information to do normalization
+    :param clmap: color scheme for heatmap
+    :param hcolor: color scheme for reference line for sth.
+    :return:
+    """
+    if not clmap or not hcolor:
+        raise ValueError("you didn't choose which color you want to use for heatmap and reference line in a plot. "
+                         "Choose color for clmap and hcolor")
 
     x = x / x.units
 
@@ -499,7 +504,7 @@ def heat_plot(x, axs, img, type='lfp', zoom='no', z_range=None, z_img=None):
     imag = axs.imshow(
         x, cmap=clmap, aspect=213 / 1500,
         extent=[0, 200, 1500, 0], interpolation='gaussian'
-        )
+    )
     img.append(imag)
     # aspect: the number of elements in x-axis
 
@@ -521,14 +526,14 @@ def heat_plot(x, axs, img, type='lfp', zoom='no', z_range=None, z_img=None):
         # zoom area mark
         patch, pp1, pp2 = mark_inset(
             axs, axins, loc1=2, loc2=2, fc="none", ec="0.5"
-            )
+        )
         pp1.loc1 = 2
         pp1.loc2 = 3
         pp2.loc1 = 3
         pp2.loc2 = 2
         z_imag = axins.imshow(x, cmap=clmap, aspect=213 / 1500,
-                             extent=[0, 200, 1500, 0],
-                             interpolation='gaussian')
+                              extent=[0, 200, 1500, 0],
+                              interpolation='gaussian')
         z_img.append(z_imag)
         axins.set_yticks(yticks2)
         axins.set_yticks(yticks, minor=True)

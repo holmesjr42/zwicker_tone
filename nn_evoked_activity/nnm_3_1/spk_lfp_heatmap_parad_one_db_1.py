@@ -2,10 +2,11 @@ import os
 import sys
 
 print(os.path.dirname(os.getcwd()))
-sys.path.insert(1, os.path.dirname(os.getcwd()))
+sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
+
 import numpy as np
 import matplotlib.pyplot as plt
-from parameters import parameters as pm
+from parameter import parameters as pm
 import h5py
 from tools import nnm_plot as nnmp
 from tools import nn_tool as nt
@@ -109,7 +110,7 @@ for d in range(len(d_list)):
 
     for c in range(len(conds)):
         cbar = nnmp.colorbar_set(
-            s_fig, s_axs[d, c], m_val, imgs[d][c], d_list[d]
+            s_fig, s_axs[d, c], imgs[d][c], d_list[d], vmax=m_val[1], vmin=m_val[0]
             )
 
 #% start: automatic generated code from pylustrator

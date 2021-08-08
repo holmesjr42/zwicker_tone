@@ -2,11 +2,11 @@ import os
 import sys
 
 print(os.path.dirname(os.getcwd()))
-sys.path.insert(1, os.path.dirname(os.getcwd()))
+sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
+
 import numpy as np
-import pickle
 import matplotlib.pyplot as plt
-from parameters import parameters as pm
+from parameter import parameters as pm
 import h5py
 import pylustrator
 from tools import nn_tool as nt
@@ -116,7 +116,7 @@ for j in range(len(l_list)):
         #     else:
         #         pass
         if stat2[1] < 0.05:
-            x = np.int(stat2[0])
+            x = int(stat2[0])
             s_axs[j, i].scatter(octs[x],
                                 np.max([data[0][x], data[1][x]]) +
                                 lim_tick[j][1] * 0.3,

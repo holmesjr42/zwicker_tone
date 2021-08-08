@@ -4,16 +4,9 @@ import sys
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
 
 import numpy as np
-import pickle
 import matplotlib.pyplot as plt
-from matplotlib import colors
-from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-from matplotlib import ticker
-import matplotlib.image as mpimg
 from parameter import parameters as pm
-import seaborn as sns
 import h5py
-from matplotlib.colors import ListedColormap
 from tools import nnm_plot as nnmp
 import pylustrator
 import quantities as pq
@@ -125,7 +118,7 @@ s_axs[2, 0].text(0, 0, 'octaves',
 
 
 # colorbar setup
-mx = nnmp.norm_color(s_img, 'spk', 0.8)
+mn, mx = nnmp.norm_color(s_img, 'spk', 0.8)
 
 for i in range(len(lvp)):
     data = spk[lvp[i]]
@@ -133,7 +126,7 @@ for i in range(len(lvp)):
     row = rows[i]
     for j in range(len(data)):
         axes = s_axs[row[j], col[j]]
-        cbar = nnmp.colorbar_set(s_fig, axes, mx, s_img[i], 'spk')
+        cbar = nnmp.colorbar_set(s_fig, axes, s_img[i], 'spk', vmax=mx, vmin=mn)
 
 
 #% start: automatic generated code from pylustrator

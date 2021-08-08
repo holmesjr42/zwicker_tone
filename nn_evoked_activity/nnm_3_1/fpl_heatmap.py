@@ -2,11 +2,11 @@ import os
 import sys
 
 print(os.path.dirname(os.getcwd()))
-sys.path.insert(1, os.path.dirname(os.getcwd()))
+sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
+
 import numpy as np
-import pickle
 import matplotlib.pyplot as plt
-from parameters import parameters as pm
+from parameter import parameters as pm
 import h5py
 from tools import nnm_plot as nnmp
 import pylustrator
@@ -115,7 +115,7 @@ s_axs[0, 0].text(0, 0, 'octaves',
                  )
 
 # colorbar setup
-mn = nnmp.norm_color(s_img, 'lfp', 0.9)
+mn, mx = nnmp.norm_color(s_img, 'lfp', 0.9)
 
 for i in range(len(lvp)):
     data = lfp[lvp[i]]
@@ -123,7 +123,7 @@ for i in range(len(lvp)):
     row = rows[i]
     for j in range(len(data)):
         axes = s_axs[row[j], col[j]]
-        cbar = nnmp.colorbar_set(s_fig, axes, mn, s_img[i], 'lfp')
+        cbar = nnmp.colorbar_set(s_fig, axes, s_img[i], 'lfp', vmax=mx, vmin=mn)
 
 
 #% start: automatic generated code from pylustrator

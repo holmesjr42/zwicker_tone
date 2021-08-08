@@ -104,15 +104,12 @@ s_axs[0, 0].text(0, 0, 'octaves',
                  fontdict={'weight': 'bold', 'size': 23}
                  )
 
-nnmp.norm_color(s_img, 'tsp', 0.8)
-
-# colorbar setup
-mx = np.around(max(ims.get_array().max() for ims in s_img) * 0.7, decimals=-1)
+mn, mx = nnmp.norm_color(s_img, 'spk', 0.8)
 
 for i in range(len(lvp)):
     axes = [s_axs[row[i], col[i]], s_axs[row[i], col[i] + 1]]
     for j in range(len(axes)):
-        cbar = nnmp.colorbar_set(s_fig, axes[j], lvp[i], mx, s_img[i], 'tsp')
+        cbar = nnmp.colorbar_set(s_fig, axes[j], s_img[i], 'spk', vmax=mx, vmin=mn)
 
 #% start: automatic generated code from pylustrator
 plt.figure(0).ax_dict = {ax.get_label(): ax for ax in plt.figure(0).axes}

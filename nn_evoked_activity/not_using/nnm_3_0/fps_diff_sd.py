@@ -1,11 +1,11 @@
 import os
 import sys
 
-sys.path.insert(1, os.path.dirname(os.getcwd()))
+sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
 
 import numpy as np
 import json
-from parameters import parameters as pm
+from parameter import parameters as pm
 import glob
 import h5py
 from scipy import stats

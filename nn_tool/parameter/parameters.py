@@ -114,61 +114,178 @@ class Datas:
         pass
 
 
+# class Setup:
+#     """
+#     setup for plotting things
+#     """
+#
+#     def __init__(self, mode=0, yl=0.1, cond=None, cond2=None,
+#                  nb=5, ch=None, ws=0.1, hs=0.2, ccmap=None, ratio=0.7,
+#                  dm=None):
+#         """
+#
+#         :param cond:
+#         :param cond2:
+#         :param ch: channels you want to use
+#         :param ccmap: color scheme for heatmaps
+#         """
+#
+#         if ch is None:
+#             ch = np.array([4, 6, 8, 10, 12])
+#         if ccmap is None or ccmap == 'spk':
+#             ccmap = ListedColormap(sns.color_palette("mako", 256))
+#         elif ccmap == 'lfp':
+#             ccmap = ListedColormap(sns.color_palette("icefire", 256))
+#             # "vlag" "icefire"
+#         elif ccmap == 'csd':
+#             ccmap = ListedColormap(sns.color_palette("rainbow_r", 256))
+#
+#         self.mode = mode
+#         self.yl = yl
+#         self.cond = cond
+#         self.cond2 = cond2
+#         self.nb = nb
+#         self.ch = ch
+#         self.ws = ws
+#         self.hs = hs
+#         self.ccmap = ccmap
+#         self.ratio = ratio
+#         self.dm = dm
+#
+#
+#     def values(self):
+#         depths = ['0', '100', '200', '300', '400', '500', '600', '700',
+#                   '800', '900', '1000', '1100', '1200', '1300', '1400', '1500']
+#
+#         l_color = ['#e6e6e6', '#4e69ab']
+#         cb = '#e6e6e6'
+#         cc = 0
+#         depth = []
+#
+#         if self.dm is None:
+#             dcmap = sns.color_palette('colorblind').as_hex()
+#         else:
+#             dcmap = 'jet'
+#
+#         for i in self.ch:
+#             depth.append(depths[i])
+#
+#         if self.cond2 == 'tsp':
+#             cc = l_color[0]
+#         elif self.cond2 == 'lfp':
+#             cc = l_color[1]
+#         else:
+#             print('ni nun ong-i-gumung')
+#
+#         return [self.mode, self.yl, self.cond, self.cond2, self.nb, self.ch,
+#                 depth, dcmap, self.ws, self.hs, self.ratio, cc, cb, self.ccmap]
+#
+#     def extra_setup(self):
+#
+#         c_n = ['nnm_3_0', 'nnm_3_1', 'nnm_1_1']
+#         c_s = ['nnm_3_0_strf', 'nnm_3_1_strf', 'nnm_1_1_strf']
+#         c_w = ['nnm_wn_3_1', 'nnm_wn_1_1']
+#
+#         cnon = ['nnm_3_1_on', 'nnm_1_1_on']
+#         cnoff = ['nnm_3_1_off', 'nnm_1_1_off']
+#         cwoff = ['nnm_wn_3_1_off', 'nnm_wn_1_1_off']
+#
+#         cc_s_onoff = ['nnm_3_1_strf', 'nnm_1_1_strf']
+#         cw_s_onoff = ['nnm_wn_3_1_strf', 'nnm_wn_1_1_strf']
+#
+#         layer_name = ['Supragranular\nlayer', 'Granular\nlayer',
+#                       'Infragranular\nlayer']
+#
+#         layer_num = [[0, 6], [6, 9], [9, 16]]  # index for each layer's
+#         # start-end points
+#
+#         l_list = ['supr', 'gran', 'infr']
+#
+#         freq = [4, 8, 12, 16, 20]  # -1, -0.5, 0, 0.5, 1 octave indice
+#
+#         f_name = ['Lower edge frq', 'Center frq', 'Higher edge Frq']
+#
+#         l_style = ['dashdot', '-', 'dashed']
+#
+#         paradigm = ['Control', 'NN-ON', 'NN-OFF', 'WN-OFF']
+#
+#         return layer_name, layer_num, l_list, freq, f_name, l_style, \
+#                paradigm, c_n, c_s, c_w, cnon, cnoff, \
+#                cwoff, cc_s_onoff, cw_s_onoff
+#
+#     def nn31_plot(self):
+#         db_lv = ['70', '60']
+#         db_ind = [0, 1]
+#
+#         dcmap = sns.color_palette('colorblind').as_hex()
+#         # color palette of plots
+#
+#         names = ['nn_3_1', 'nn_wn_3_1']  # for accessing data stored in dict
+#
+#         legends = [
+#             ['NN - ON', 'WN - ON'],
+#             ['NN - OFF', 'WN - OFF'],
+#             ['NN', 'WN']
+#         ]  # for plotting
+#
+#         ch = [1, 7, 11]  # channel number which represents each layer in
+#         # l_list
+#
+#         l_list = ['supr', 'gran', 'infr']  # list of layers. it represents
+#         # supragranular layer, granular layer, infragranular layer following
+#         # the list element order.
+#
+#         layer_name = ['Supragranular\nlayer', 'Granular\nlayer',
+#                       'Infragranular\nlayer']  # for plotting
+#
+#         return db_lv, db_ind, dcmap, names, legends, ch, l_list, layer_name
+#
+#     def nn11_plot(self):
+#         db_lv = ['70', '60']
+#         db_ind = [0, 1]
+#
+#         dcmap = sns.color_palette('colorblind').as_hex()
+#         # color palette of plots
+#
+#         names = ['nn_1_1', 'nn_wn_1_1']  # for accessing data stored in dict
+#
+#         legends = [['NN - OFF', 'WN - OFF'], ['NN', 'WN']]  # for plotting
+#
+#         ch = [0, 7, 11]  # channel number which represents each layer in
+#         # l_list
+#
+#         l_list = ['supr', 'gran', 'infr']  # list of layers. it represents
+#         # supragranular layer, granular layer, infragranular layer following
+#         # the list element order.
+#
+#         layer_name = ['Supragranular\nlayer', 'Granular\nlayer',
+#                       'Infragranular\nlayer']  # for plotting
+#
+#         return db_lv, db_ind, dcmap, names, legends, ch, l_list, layer_name
 class Setup:
-    def __init__(self, mode=0, yl=0.1, cond=None, cond2=None,
-                 nb=5, ch=None, ws=0.1, hs=0.2, ccmap=None, ratio=0.7,
-                 dm=None):
+    """
+    setup for plotting things
+    """
 
-        if ch is None:
-            ch = np.array([4, 6, 8, 10, 12])
-        if ccmap is None or ccmap == 'spk':
-            ccmap = ListedColormap(sns.color_palette("mako", 256))
-        elif ccmap == 'lfp':
-            ccmap = ListedColormap(sns.color_palette("icefire", 256))
-            # "vlag" "icefire"
-        elif ccmap == 'csd':
-            ccmap = ListedColormap(sns.color_palette("rainbow_r", 256))
+    def __init__(self, ch=None, ch_offset=None, hcmap_mode=None, mode=None):
+        """
+        :param ch: channels you want to use
+        :param ch_offset: channels you want to use for offset analysis
+        :param hcmap_mode: color scheme for different heatmaps---choose 'spk', 'lfp', or 'csd' for the right color
+        :param mode: if you want to have fun, set it 'fun'
+        """
 
-        self.mode = mode
-        self.yl = yl
-        self.cond = cond
-        self.cond2 = cond2
-        self.nb = nb
-        self.ch = ch
-        self.ws = ws
-        self.hs = hs
-        self.ccmap = ccmap
-        self.ratio = ratio
-        self.dm = dm
-
-    def values(self):
         depths = ['0', '100', '200', '300', '400', '500', '600', '700',
                   '800', '900', '1000', '1100', '1200', '1300', '1400', '1500']
 
         l_color = ['#e6e6e6', '#4e69ab']
-        cb = '#e6e6e6'
-        cc = 0
+
+        descrete_cmap = None
+
         depth = []
 
-        if self.dm is None:
-            dcmap = sns.color_palette('colorblind').as_hex()
-        else:
-            dcmap = 'jet'
-
-        for i in self.ch:
-            depth.append(depths[i])
-
-        if self.cond2 == 'tsp':
-            cc = l_color[0]
-        elif self.cond2 == 'lfp':
-            cc = l_color[1]
-        else:
-            print('ni nun ong-i-gumung')
-
-        return [self.mode, self.yl, self.cond, self.cond2, self.nb, self.ch,
-                depth, dcmap, self.ws, self.hs, self.ratio, cc, cb, self.ccmap]
-
-    def extra_setup(self):
+        hcmap = None
+        ref_line_color = None  # line color for axh/axvline for notch band and granular layer
 
         c_n = ['nnm_3_0', 'nnm_3_1', 'nnm_1_1']
         c_s = ['nnm_3_0_strf', 'nnm_3_1_strf', 'nnm_1_1_strf']
@@ -186,7 +303,6 @@ class Setup:
 
         layer_num = [[0, 6], [6, 9], [9, 16]]  # index for each layer's
         # start-end points
-
         l_list = ['supr', 'gran', 'infr']
 
         freq = [4, 8, 12, 16, 20]  # -1, -0.5, 0, 0.5, 1 octave indice
@@ -197,65 +313,95 @@ class Setup:
 
         paradigm = ['Control', 'NN-ON', 'NN-OFF', 'WN-OFF']
 
-        return layer_name, layer_num, l_list, freq, f_name, l_style, \
-               paradigm, c_n, c_s, c_w, cnon, cnoff, \
-               cwoff, cc_s_onoff, cw_s_onoff
-
-    def nn31_plot(self):
-        db_lv = ['70', '60']
-        db_ind = [0, 1]
-
-        dcmap = sns.color_palette('colorblind').as_hex()
-        # color palette of plots
-
-        names = ['nn_3_1', 'nn_wn_3_1']  # for accessing data stored in dict
-
         legends = [
             ['NN - ON', 'WN - ON'],
             ['NN - OFF', 'WN - OFF'],
             ['NN', 'WN']
         ]  # for plotting
 
-        ch = [1, 7, 11]  # channel number which represents each layer in
-        # l_list
-
-        l_list = ['supr', 'gran', 'infr']  # list of layers. it represents
-        # supragranular layer, granular layer, infragranular layer following
-        # the list element order.
-
-        layer_name = ['Supragranular\nlayer', 'Granular\nlayer',
-                      'Infragranular\nlayer']  # for plotting
-
-        return db_lv, db_ind, dcmap, names, legends, ch, l_list, layer_name
-
-    def nn11_plot(self):
+        # offset setups
         db_lv = ['70', '60']
         db_ind = [0, 1]
 
-        dcmap = sns.color_palette('colorblind').as_hex()
-        # color palette of plots
+        cond_3_1 = ['nn_3_1', 'nn_wn_3_1']
+        cond_1_1 = ['nn_1_1', 'nn_wn_1_1']
 
-        names = ['nn_1_1', 'nn_wn_1_1']  # for accessing data stored in dict
+        self.mode = mode
+        self.depths = depths
+        self.c_n = c_n
+        self.c_s = c_s
+        self.c_w = c_w
+        self.cnon = cnon
+        self.cnoff = cnoff
+        self.cwoff = cwoff
+        self.cc_s_onoff = cc_s_onoff
+        self.cw_s_onoff = cw_s_onoff
+        self.layer_name = layer_name
+        self.layer_num = layer_num
+        self.l_list = l_list
+        self.freq = freq
+        self.f_name = f_name
+        self.l_style = l_style
+        self.paradigm = paradigm
+        self.legends = legends
 
-        legends = [['NN - OFF', 'WN - OFF'], ['NN', 'WN']]  # for plotting
+        self.db_lv = db_lv
+        self.db_ind = db_ind
+        self.cond_3_1 = cond_3_1
+        self.cond_1_1 = cond_1_1
+        if ch is None:
+            ch = np.array([4, 6, 8, 10, 12])
 
-        ch = [0, 7, 11]  # channel number which represents each layer in
-        # l_list
+        if ch_offset is None:
+            ch_offset = [1, 7, 11]
 
-        l_list = ['supr', 'gran', 'infr']  # list of layers. it represents
-        # supragranular layer, granular layer, infragranular layer following
-        # the list element order.
+        if mode is None:
+            descrete_cmap = sns.color_palette('colorblind').as_hex()
+            ref_line_color = 'white'
+            if hcmap_mode is None or hcmap_mode == 'spk':
+                hcmap = ListedColormap(sns.color_palette("mako", 256))
+            elif hcmap_mode == 'lfp':
+                hcmap = ListedColormap(sns.color_palette("icefire", 256))
+                # "vlag" "icefire"
+            elif hcmap_mode == 'csd':
+                hcmap = ListedColormap(sns.color_palette("icefire_r", 256))
+            else:
+                print('You did not choose right option for a color scheme, set -ccmap- between spk, lfp, or csd.')
 
-        layer_name = ['Supragranular\nlayer', 'Granular\nlayer',
-                      'Infragranular\nlayer']  # for plotting
+        elif mode == 'fun':
+            descrete_cmap = ['cyan', 'magenta', 'yellow', 'lime', 'darkorchid']
+            ref_line_color = 'magenta'
+            if hcmap_mode is None or hcmap_mode == 'spk':
+                hcmap = 'cool'
+            elif hcmap_mode == 'lfp':
+                hcmap = 'turbo'
+                # "vlag" "icefire"
+            elif hcmap_mode == 'csd':
+                hcmap = 'turbo_r'
+            else:
+                print('You did not choose the right option for a color scheme, set -ccmap- between spk, lfp, or csd.')
+                raise ValueError
 
-        return db_lv, db_ind, dcmap, names, legends, ch, l_list, layer_name
+        else:
+            print('You did not choose the right option for the mode. Choose fun if you want to have fun')
+
+        for i in ch:
+            depth.append(depths[i])
+
+        self.depth = depth
+        self.hcmap = hcmap
+        self.d_camp = descrete_cmap
+        self.ref_line_color = ref_line_color
+        self.ch = ch
+        self.ch_offset = ch_offset
 
 
 class Nn:
-    ind_3_1 = [np.arange(0, 180000 - 4000 + 1, 4000), np.arange(4000, 180000 + 1, 4000)]
-    ind_1_1 = [np.arange(0, 180000 - 2000 + 1, 2000), np.arange(2000, 180000 + 1, 2000)]
-    def setup(self):
+
+    def __init(self):
+        ind_3_1 = [np.arange(0, 180000 - 4000 + 1, 4000), np.arange(4000, 180000 + 1, 4000)]
+        ind_1_1 = [np.arange(0, 180000 - 2000 + 1, 2000), np.arange(2000, 180000 + 1, 2000)]
+
         names = [
             'nn_3_1', 'nn_wn_3_1', 'nn_1_1', 'nn_wn_1_1',
             'nn_3_1_nt', 'nn_wn_3_1_nt', 'nn_1_1_nt', 'nn_wn_1_1_nt'
@@ -266,4 +412,14 @@ class Nn:
         s_dat = ['rastor', 'psth', 's_psth',
                  'time']  # spk session rastor, psths, time
 
-        return names, db, l_dat, s_dat
+        self.ind_3_1 = ind_3_1
+        self.ind_1_1 = ind_1_1
+        self.names = names
+        self.db = db
+        self.l_dat = l_dat
+        self.s_dat = s_dat
+
+
+if __name__ == "__main__":
+    st = Setup()
+    print(st.depth)

@@ -4,7 +4,6 @@ import sys
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
 
 import numpy as np
-import json
 import matplotlib.pyplot as plt
 from parameter import parameters as pm
 import h5py
