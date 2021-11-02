@@ -1,6 +1,0 @@
-Building DAG of jobs...
-MissingInputException in line 14 of /home/bhc/codes/nn_offset_response/nns/Snakefile:
-Missing input files for rule nn_layer_3_1:
-/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/tsp/cr92_2011029_tsp.hdf5
-/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_lfp_avg/cr92_2011029_nn_lfp_a.pk
-/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/nn_lfp_avg/cr103_201215_nn_lfp_a.pk
