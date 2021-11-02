@@ -1,4 +1,0 @@
-Building DAG of jobs...
-MissingInputException in line 10 of /home/bhc/codes/zwicker_tone/nn_offset_response/nn_mean/Snakefile:
-Missing input files for rule session_mean:
-/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/dataset/lfP_fil/cr31_190312_lfp_fil.hdf5
