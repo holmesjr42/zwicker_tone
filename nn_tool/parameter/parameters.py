@@ -1,21 +1,34 @@
 import os
+import pathlib
+import platform
 
 import numpy as np
 import pickle
+
 from matplotlib.colors import ListedColormap
 import seaborn as sns
 
-file_path = '/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/'
-param_path = '/home/bhc/codes/zwicker_tone/nn_tool/parameter/'
-sr_lfp = 1061.48
+# assigning paths for the tool and data directories.
+data_path = 'OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/'
+param_path_ = pathlib.Path(__file__).parents[2] / "nn_tool/parameter"
+param_path = str(param_path_)
+
+if platform.node() == 'DESKTOP-K2A53B8':
+    partition = 'D:/'
+else:
+    raise ValueError('There is no partition for the data path.')
+
+file_path = os.path.join(partition, data_path)
+
+sr_lfp = 1061.48  # lfp sampling rate, Hz
 
 
 class Commonfeat:
-    with open(param_path + 'animal_dB_coord.pk',
+    with open(param_path + '/animal_dB_coord.pk',
               'rb') as a_coord:
         db = pickle.load(a_coord)
 
-    list_freq = np.load(param_path + 'list_freq.npy', allow_pickle=True)
+    list_freq = np.load(param_path + '/list_freq.npy', allow_pickle=True)
 
     # any other variables are included in spike_tools
     f_path = file_path
@@ -25,7 +38,7 @@ class Commonfeat:
                'cr50_190724', 'cr79_200211', 'cr90_201023', 'cr92_201029',
                'cr93_201110', 'cr94_201112', 'cr95_201117']
 
-    p_info = np.load(param_path + 'time_index_multi_tones_500ms_180s.npy',
+    p_info = np.load(param_path + '/time_index_multi_tones_500ms_180s.npy',
                      allow_pickle=True)
 
     octaves = np.array(
@@ -81,7 +94,7 @@ nn on-off
 class Nnsifeat:
     # timed index for multi-tone pip trigger
 
-    with open(param_path + 'time_index_multi_tones_500ms_180s_nn_si.pk',
+    with open(param_path + '/time_index_multi_tones_500ms_180s_nn_si.pk',
               'rb') as pip:
         p_infos = pickle.load(pip)
 
@@ -366,7 +379,8 @@ class Setup:
             elif hcmap_mode == 'csd':
                 hcmap = ListedColormap(sns.color_palette("icefire_r", 256))
             else:
-                print('You did not choose right option for a color scheme, set -ccmap- between spk, lfp, or csd.')
+                print('You did not choose right option for a color scheme, '
+                      'set -ccmap- between spk, lfp, or csd.')
 
         elif mode == 'fun':
             descrete_cmap = ['cyan', 'magenta', 'yellow', 'lime', 'darkorchid']
@@ -379,11 +393,13 @@ class Setup:
             elif hcmap_mode == 'csd':
                 hcmap = 'turbo_r'
             else:
-                print('You did not choose the right option for a color scheme, set -ccmap- between spk, lfp, or csd.')
+                print('You did not choose the right option for a color '
+                      'scheme, set -ccmap- between spk, lfp, or csd.')
                 raise ValueError
 
         else:
-            print('You did not choose the right option for the mode. Choose fun if you want to have fun')
+            print('You did not choose the right option for the mode. Choose '
+                  'fun if you want to have fun')
 
         for i in ch:
             depth.append(depths[i])

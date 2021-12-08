@@ -1,8 +1,10 @@
 import os
 import sys
+import pathlib
 
-print(os.path.dirname(os.getcwd()))
-sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
+# add path to the tool directory to sys.path
+tool_path = pathlib.Path(__file__).parents[2] / "nn_tool"
+sys.path.insert(1, str(tool_path))
 
 import numpy as np
 import matplotlib.pyplot as plt

@@ -1,7 +1,10 @@
 import os
 import sys
+import pathlib
 
-sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
+# add path to the tool directory to sys.path
+tool_path = pathlib.Path(__file__).parents[2] / "nn_tool"
+sys.path.insert(1, str(tool_path))
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -61,8 +64,7 @@ def db_lv(data):
 
 
 # function for nnm plotting
-# function for nnm plotting
-def nnm_plot(aax, dats, imag, cm, types='octave', cf=0):
+def nnm_plot(aax, dats, imag, cm, types='octave', cf=0, col_ref='white'):
     # aax.tick_params(axis='both', length=0.9, width=0.5)
     aax.spines['top'].set_visible(False)
     aax.spines['right'].set_visible(False)
@@ -87,7 +89,7 @@ def nnm_plot(aax, dats, imag, cm, types='octave', cf=0):
 
         # notch line
         for p in [-0.5, 0.5]:
-            aax.axhline(y=p, color='white', linestyle='-.', lw=1)
+            aax.axhline(y=p, color=col_ref, linestyle='-.', lw=1)
         # plt.subplots_adjust(wspace=.001)
         aax.set_xticks(np.linspace(0, 100, 5, endpoint=True), minor=True)
         aax.set_xticks(np.linspace(0, 100, 3, endpoint=True))
@@ -113,7 +115,7 @@ def nnm_plot(aax, dats, imag, cm, types='octave', cf=0):
         h_e = int(np.round(8 * np.log2(h_e1 / 500)))
 
         for p in [l_e, h_e]:
-            aax.axhline(y=p, color='white', linestyle='-.', lw=1)
+            aax.axhline(y=p, color=col_ref, linestyle='-.', lw=1)
         # plt.subplots_adjust(wspace=.001)
         aax.set_xticks(np.linspace(0, 100, 5, endpoint=True), minor=True)
         aax.set_xticks(np.linspace(0, 100, 3, endpoint=True))
@@ -397,7 +399,7 @@ def colorbar_set(fig, axs, img, types, vmax=0, vmin=0, ori='vertical'):
     if types == 'lfp':
         ticklist = [vmin, 0, vmax]
         cbart = fig.colorbar(
-            img, cax=axs,
+            img, ax=axs,
             orientation=ori,
             format='%.2f',
             fraction=0.02,
@@ -408,7 +410,7 @@ def colorbar_set(fig, axs, img, types, vmax=0, vmin=0, ori='vertical'):
     elif types == 'spk':
         ticklist = np.linspace(0, vmax, 3, endpoint=True)
         cbart = fig.colorbar(
-            img, cax=axs,
+            img, ax=axs,
             orientation=ori,
             format='%.0f',
             fraction=0.02,
@@ -419,7 +421,7 @@ def colorbar_set(fig, axs, img, types, vmax=0, vmin=0, ori='vertical'):
     elif types == 'csd':
         ticklist = [vmin, 0, vmax]
         cbart = fig.colorbar(
-            img, cax=axs,
+            img, ax=axs,
             orientation=ori,
             format='%.1f',
             fraction=0.02,
@@ -430,7 +432,7 @@ def colorbar_set(fig, axs, img, types, vmax=0, vmin=0, ori='vertical'):
     elif types == 'd_spk':
         ticklist = [vmin, 0, vmax]
         cbart = fig.colorbar(
-            img, cax=axs,
+            img, ax=axs,
             orientation=ori,
             format='%.0f',
             fraction=0.02,
@@ -441,7 +443,7 @@ def colorbar_set(fig, axs, img, types, vmax=0, vmin=0, ori='vertical'):
     elif types == 'd_lfp':
         ticklist = [vmin, 0, vmax]
         cbart = fig.colorbar(
-            img, cax=axs,
+            img, ax=axs,
             orientation=ori,
             format='%.2f',
             fraction=0.02,
@@ -455,6 +457,19 @@ def colorbar_set(fig, axs, img, types, vmax=0, vmin=0, ori='vertical'):
 
     cbart.ax.tick_params(labelsize=18)
     cbart.update_ticks()
+
+    return cbart
+
+
+def remove_colorbar(fig):
+    """
+
+    :param fig: main figure
+    """
+    fig.ax_dict = {
+        ax.get_label(): ax for ax in plt.figure(0).axes
+    }
+    fig.ax_dict["<colorbar>"].set_visible(False)
 
 
 def csd_calc(x, f_type, f_order):
@@ -474,7 +489,8 @@ def csd_calc(x, f_type, f_order):
     return f_csd
 
 
-def heat_plot(x, axs, img, zoom='no', z_range=None, z_img=None, clmap=None, hcolor=None):
+def heat_plot(x, axs, img, zoom='no', z_range=None, z_img=None, clmap=None,
+              hcolor=None):
     """
 
     :param x: data array
@@ -488,8 +504,9 @@ def heat_plot(x, axs, img, zoom='no', z_range=None, z_img=None, clmap=None, hcol
     :return:
     """
     if not clmap or not hcolor:
-        raise ValueError("you didn't choose which color you want to use for heatmap and reference line in a plot. "
-                         "Choose color for clmap and hcolor")
+        raise ValueError(
+            "you didn't choose which color you want to use for heatmap and reference line in a plot. "
+            "Choose color for clmap and hcolor")
 
     x = x / x.units
 

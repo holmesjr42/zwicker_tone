@@ -40,7 +40,7 @@ l_list = sets[2]
 # indice of edge frequencies in octaves
 find = [sets[3][1], sets[3][-2]]
 f_name = [sets[5][0], sets[5][2]]
-# temp
+# dissertation
 
 #  loading data
 

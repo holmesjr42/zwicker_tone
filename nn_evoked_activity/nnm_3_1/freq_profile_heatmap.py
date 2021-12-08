@@ -1,12 +1,15 @@
-import os
 import sys
+import pathlib
 
-sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
+# add path to the tool directory to sys.path
+tool_path = pathlib.Path(__file__).parents[2] / "nn_tool"
+sys.path.insert(1, str(tool_path))
 
+import h5py
 import numpy as np
+
 import matplotlib.pyplot as plt
 from parameter import parameters as pm
-import h5py
 from tools import nnm_plot as nnmp
 import pylustrator
 import quantities as pq

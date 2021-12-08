@@ -41,7 +41,7 @@ l_list = sets[2]
 find = [sets[3][1], sets[3][3]]
 
 f_name = [sets[5][0], sets[5][2]]
-# temp
+# dissertation
 
 #  loading data
 

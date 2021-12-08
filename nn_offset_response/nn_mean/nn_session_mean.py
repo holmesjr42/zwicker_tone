@@ -60,8 +60,8 @@ for t in range(len(types)):
                     for i in range(len(f[n])):
                         dat = f[n][i]
                         lst = nt.lfp_seg(dat, n)
-                        l_temp = []  # temp storage for lfp mean
-                        c_temp = []  # temp storage for lfp quantile 0.25/0.75
+                        l_temp = []  # dissertation storage for lfp mean
+                        c_temp = []  # dissertation storage for lfp quantile 0.25/0.75
                         for j in range(len(lst)):  # number of channels
 
                             # processing session mean

@@ -39,7 +39,7 @@ l_list = sets[2]
 # indice list of low edge, center, high edge, 0.5 oct above/below  of notch gap
 find = [sets[3][1], sets[3][-2]]
 f_name = sets[5]
-# temp
+# dissertation
 
 #  loading data
 

@@ -1,0 +1,17 @@
+### Example user template
+# IntelliJ project files
+#.idea
+#*.iml
+#out
+#gen
+### Result files
+# sometimes I export results in this folder
+*.png
+*.svg
+*.csv
+
+### package I just cloned so that I do not have to do pip install
+/neo/
+
+###  virtual environment just in case
+/venv/

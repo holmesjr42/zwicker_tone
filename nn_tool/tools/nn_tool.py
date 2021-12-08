@@ -665,12 +665,12 @@ def diff(data, layer, lv, cn, cs, ind=None, bdata=None, types='spk',
                 print("you forgot to indicate which kind of data it is")
                 raise ValueError
 
-        tempm = np.median(np.array(tempr), axis=0)  # temp for
+        tempm = np.median(np.array(tempr), axis=0)  # dissertation for
         # median
 
-        tempe2 = np.percentile(np.array(tempr), 25, axis=0)  # temp for
+        tempe2 = np.percentile(np.array(tempr), 25, axis=0)  # dissertation for
         # quartile, 0.25
-        tempe7 = np.percentile(np.array(tempr), 75, axis=0)  # temp for
+        tempe7 = np.percentile(np.array(tempr), 75, axis=0)  # dissertation for
         # quartile, 0.75
         return tempm, tempe2, tempe7, tempr
 
@@ -702,12 +702,12 @@ def diff(data, layer, lv, cn, cs, ind=None, bdata=None, types='spk',
             print("you forgot to indicate which kind of data it is")
             raise ValueError
 
-        tempm = np.median(np.array(tempr), axis=0)  # temp for
+        tempm = np.median(np.array(tempr), axis=0)  # dissertation for
         # median
 
-        tempe2 = np.percentile(np.array(tempr), 25, axis=0)  # temp for
+        tempe2 = np.percentile(np.array(tempr), 25, axis=0)  # dissertation for
         # quartile, 0.25
-        tempe7 = np.percentile(np.array(tempr), 75, axis=0)  # temp for
+        tempe7 = np.percentile(np.array(tempr), 75, axis=0)  # dissertation for
         # quartile, 0.75
         return tempm, tempe2, tempe7, tempr
 
@@ -758,12 +758,12 @@ def diff_on_off(data, layer, lv, cn, cs, cnon, bdata=None, types='spk'):
         print("you forgot to indicate which kind of data it is")
         raise ValueError
 
-    tempm = np.median(np.array(tempr), axis=0)  # temp for
+    tempm = np.median(np.array(tempr), axis=0)  # dissertation for
     # median
 
-    tempe2 = np.percentile(np.array(tempr), 25, axis=0)  # temp for
+    tempe2 = np.percentile(np.array(tempr), 25, axis=0)  # dissertation for
     # quartile, 0.25
-    tempe7 = np.percentile(np.array(tempr), 75, axis=0)  # temp for
+    tempe7 = np.percentile(np.array(tempr), 75, axis=0)  # dissertation for
     # quartile, 0.75
     temci = sms.DescrStatsW(np.array(tempr)).tconfint_mean()
 

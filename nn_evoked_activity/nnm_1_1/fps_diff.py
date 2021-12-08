@@ -78,7 +78,7 @@ with h5py.File(file_input, 'r') as dat:
             tempnon = sk[cnon][layer][lv]  # temporary list for nn-on data
             tempnoff = sk[cnoff][layer][lv]  # temporary list for nn-off data
             tempwoff = sk[cwoff][layer][lv]  # temporary list for wn-off data
-            tempc = sk[cc][layer][lv]  # temp list for control data
+            tempc = sk[cc][layer][lv]  # dissertation list for control data
             tempwc = sk[cw][layer][lv]
             temp_rnon = []  # temporary list for nn-on ratio
             temp_rnoff = []  # temporary list for nn-off ratio

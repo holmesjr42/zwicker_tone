@@ -284,6 +284,7 @@ import scipy.signal as ss
 import quantities as pq
 import neo
 import neo.core
+
 # patch quantities with the SI unit Siemens if it does not exist
 for symbol, prefix, definition, u_symbol in zip(
         ['siemens', 'S', 'mS', 'uS', 'nS', 'pS'],
@@ -457,9 +458,9 @@ class StandardCSD(CSD):
             else:
                 self.lfp = np.empty(
                     (lfp.shape[0] + 2, lfp.shape[1])) * lfp.units
-            self.lfp[0, ] = lfp[0, ]
+            self.lfp[0,] = lfp[0,]
             self.lfp[1:-1, ] = lfp
-            self.lfp[-1, ] = lfp[-1, ]
+            self.lfp[-1,] = lfp[-1,]
         else:
             self.lfp = lfp
 
@@ -1173,16 +1174,16 @@ def estimate_csd(lfp, coord_electrode, sigma, method='standard', diam=None,
         raise ValueError
 
     if not isinstance(lfp, neo.core.AnalogSignal):
-    # if not isinstance(lfp, neo.AnalogSignalArray):
+        # if not isinstance(lfp, neo.AnalogSignalArray):
         print('Parameter `lfp` must be neo.AnalogSignalArray')
         raise TypeError
 
-    if f_type is not 'identity' and f_order is None:
+    if f_type != 'identity' and not f_order:
         print("The order of {} filter must be specified".format(f_type))
         raise ValueError
 
     lfp_pqarr = lfp.magnitude.T * lfp.units
-    if sigma_top is None:
+    if not sigma_top:
         sigma_top = sigma
 
     arg_dict = {'lfp': lfp_pqarr,
