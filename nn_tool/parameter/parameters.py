@@ -13,11 +13,24 @@ data_path = 'OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/'
 param_path_ = pathlib.Path(__file__).parents[2] / "nn_tool/parameter"
 param_path = str(param_path_)
 
-if platform.node() == 'DESKTOP-K2A53B8':
-    partition = 'D:/'
-else:
-    raise ValueError('There is no partition for the data path.')
 
+def data_path_selection():
+    if platform.node() == 'DESKTOP-K2A53B8':
+        partition = 'D:/'
+    elif platform.node() == 'DESKTOP-SDAA-AURORA':
+        if platform.system() == 'Windows':
+            partition = 'D:/'
+        else:
+            raise ValueError(
+                f'This script is not available for the system {platform.system()}'
+                f'in {platform.node()}'
+                )
+    else:
+        raise ValueError('There is no partition for the data path.')
+    return partition
+
+
+partition = data_path_selection()
 file_path = os.path.join(partition, data_path)
 
 sr_lfp = 1061.48  # lfp sampling rate, Hz
@@ -58,7 +71,7 @@ class Commonfeat:
         'cr93': 1834, 'cr94': 8724, 'cr95': 8000, 'cr96': 2378,
         'cr98': 5657, 'cr101': 16000, 'cr102': 16000, 'cr103': 6727,
         'cr121c': 11314, 'cr122b': 11314
-    }
+        }
 
     # channel represents supr, gran, infra layer
     ch_l = [3, 7, 11]
@@ -83,7 +96,7 @@ class Nnmcontfeat:
         # 'nnm_3_0_05': ['nnm_3_0_05', 'nnm_3_0_05_strf']
         # 'nnm_lef': ['nnm_lef', 'nnm_lef_strf'],
         # 'nnm_hef': ['nnm_hef', 'nnm_hef_strf']
-    }
+        }
 
 
 """
@@ -109,7 +122,7 @@ class Nnsifeat:
     lists = {
         'nnm_3_1': ['nnm_3_1', 'nnm_3_1_strf', 'nnm_wn_3_1'],
         'nnm_1_1': ['nnm_1_1', 'nnm_1_1_strf', 'nnm_wn_1_1'],
-    }
+        }
 
 
 class Datas:
@@ -330,7 +343,7 @@ class Setup:
             ['NN - ON', 'WN - ON'],
             ['NN - OFF', 'WN - OFF'],
             ['NN', 'WN']
-        ]  # for plotting
+            ]  # for plotting
 
         # offset setups
         db_lv = ['70', '60']
@@ -415,13 +428,15 @@ class Setup:
 class Nn:
 
     def __init(self):
-        ind_3_1 = [np.arange(0, 180000 - 4000 + 1, 4000), np.arange(4000, 180000 + 1, 4000)]
-        ind_1_1 = [np.arange(0, 180000 - 2000 + 1, 2000), np.arange(2000, 180000 + 1, 2000)]
+        ind_3_1 = [np.arange(0, 180000 - 4000 + 1, 4000),
+                   np.arange(4000, 180000 + 1, 4000)]
+        ind_1_1 = [np.arange(0, 180000 - 2000 + 1, 2000),
+                   np.arange(2000, 180000 + 1, 2000)]
 
         names = [
             'nn_3_1', 'nn_wn_3_1', 'nn_1_1', 'nn_wn_1_1',
             'nn_3_1_nt', 'nn_wn_3_1_nt', 'nn_1_1_nt', 'nn_wn_1_1_nt'
-        ]
+            ]
         db = ['70', '60']  # SPL of nn_offset
 
         l_dat = ['mean', 'q27']  # lfp session mean/confidence interval

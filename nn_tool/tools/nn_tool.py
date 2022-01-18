@@ -147,14 +147,16 @@ class OffsetPrepare:
                 for i in range(chs):
                     for j in range(np.size(ind[0])):
                         # session of nn/wn  file with 4000/2000 ms/session
-                        n_raster[k][i][j] = self.mua[k][i][ind[0][j]:ind[1][j] + 1]
+                        n_raster[k][i][j] = self.mua[k][i][
+                                            ind[0][j]:ind[1][j] + 1]
         else:
             pass
 
         n_psth = np.mean(n_raster, axis=2) * (pq.ms ** -1)
 
         n_psth.units = pq.s ** -1
-        s_psth = [[np.convolve(filt / filt.sum(), ch, mode='same') for ch in lv] for lv in n_psth] * (pq.s ** -1)
+        s_psth = [[np.convolve(filt / filt.sum(), ch, mode='same') for ch in lv]
+                  for lv in n_psth] * (pq.s ** -1)
 
         return [n_raster, n_psth, s_psth, t_n]
 
@@ -177,14 +179,17 @@ class OffsetPrepare:
         l_ind = lfp_index(ind)
         t_n = np.linspace(0, t_total + 1, t_total_lfp) * pq.ms
         t_n.units = pq.s
-        lfp_segs = np.zeros([len(self.lfp), 16, np.size(ind[0]), t_total_lfp + 1])
+        lfp_segs = np.zeros(
+            [len(self.lfp), 16, np.size(ind[0]), t_total_lfp + 1])
 
         if np.any(self.lfp[0]):
             for k in range(len(self.lfp)):  # num of SPL dB arrays
                 for i in range(chs):  # number of channels
                     for j in range(np.size(ind[0])):
                         lfp_segs[k][i][j] = self.lfp[k][i][
-                                            l_ind[0][j].magnitude:t_total_lfp + l_ind[0][j].magnitude + 1
+                                            l_ind[0][j].magnitude:t_total_lfp +
+                                                                  l_ind[0][
+                                                                      j].magnitude + 1
                                             ]
         else:
             pass
@@ -210,14 +215,18 @@ def threshold(self):
         raise ValueError
 
     ths = []
-    trf = [150, 50]  # time points to calculate reference session (so called spontaneous session) range
+    trf = [150,
+           50]  # time points to calculate reference session (so called
+    # spontaneous session) range
 
-    # test with raster-----------------if you want to test the difference between mean-segment threshold and single
-    # segment threshold, use this part with exemplary animal file
+    # test with raster-----------------if you want to test the difference
+    # between mean-segment threshold and single segment threshold, use this
+    # part with exemplary animal file
     spk = self.spk_segs[0][0][0][1]
     spk2 = spk[:, :, ti + trf[0]:tf - trf[1]]
     print(np.shape(spk2))
-    spk3 = spk2.reshape(np.shape(spk2)[0], np.shape(spk2)[1] * np.shape(spk2)[2])
+    spk3 = spk2.reshape(np.shape(spk2)[0],
+                        np.shape(spk2)[1] * np.shape(spk2)[2])
     # -------------------------------------------------------------------------------------------------------------
 
     # lfp = self.lfp_segs[0][0][0][0]
@@ -260,53 +269,66 @@ class Offset:
         self.lv_ind = lvs.index(lv)
         self.spk = data['spk']  # spike data
         self.lfp = data['lfp']  # lfp data
-        self.s_t = s_t  # ti, tm (tf of offset response window), and tf of offset phase, spike
-        self.l_t = l_t  # ti, tm (tf of offset response window), and tf of offset phase, lfp
+        self.s_t = s_t  # ti, tm (tf of offset response window), and tf of
+        # offset phase, spike
+        self.l_t = l_t  # ti, tm (tf of offset response window), and tf of
+        # offset phase, lfp
 
     def threshold(self):
-        dat = ['raster', 'segments']  # dic key for spk and lfp to calculate threshold
+        dat = ['raster',
+               'segments']  # dic key for spk and lfp to calculate threshold
         conds = cond[self.cond_ind]
         # dimension of raster/seg data before reshaping:
         # (num. of lv, num. of channel, segments, 1 ms spike bin/ lfp amplitude)
         s_raster = np.hstack((
-            self.spk[conds[0]][dat[0]][self.lv_ind][:, :, self.s_t[1]: self.s_t[2] - 50],
-            self.spk[conds[1]][dat[0]][self.lv_ind][:, :, self.s_t[1]: self.s_t[2] - 50]
-        ))
+            self.spk[conds[0]][dat[0]][self.lv_ind]
+            [:, :, self.s_t[1]:self.s_t[2] - 50],
+            self.spk[conds[1]][dat[0]][self.lv_ind]
+            [:, :, self.s_t[1]:self.s_t[2] - 50]
+            ))
         s_raster = s_raster.reshape((
             np.shape(s_raster)[0], np.shape(s_raster)[1] * np.shape(s_raster)[2]
-        )) * (pq.ms ** -1)
+            )) * (pq.ms ** -1)
         s_raster.units = pq.s ** -1
 
         l_seg = np.hstack((
-            self.lfp[conds[0]][dat[1]][self.lv_ind][:, :, self.l_t[1]: self.l_t[2] - 50],
-            self.lfp[conds[1]][dat[1]][self.lv_ind][:, :, self.l_t[1]: self.l_t[2] - 50]
-        ))
+            self.lfp[conds[0]][dat[1]][self.lv_ind]
+            [:, :, self.l_t[1]: self.l_t[2] - 50],
+            self.lfp[conds[1]][dat[1]][self.lv_ind]
+            [:, :, self.l_t[1]: self.l_t[2] - 50]
+            ))
 
-        l_seg = l_seg.reshape((np.shape(l_seg)[0], np.shape(l_seg)[1] * np.shape(l_seg)[2]))
+        l_seg = l_seg.reshape(
+            (np.shape(l_seg)[0], np.shape(l_seg)[1] * np.shape(l_seg)[2]))
 
         # threshold of spk and lfp
         thrs = [
             np.mean(s_raster, axis=1) + np.std(s_raster, axis=1),
             np.mean(l_seg, axis=1) - 1 * np.std(l_seg, axis=1)
-        ]
+            ]
 
         return thrs
 
     def threshold_alt(self):
-        dat = ['raster', 'segments']  # dic key for spk and lfp to calculate threshold
+        dat = ['raster',
+               'segments']  # dic key for spk and lfp to calculate threshold
         conds = cond[self.cond_ind]
         # dimension of raster/seg data before reshaping:
         # (num. of lv, num. of channel, segments, 1 ms spike bin/ lfp amplitude)
         s_raster = np.hstack((
-            self.spk[conds[0]][dat[0]][self.lv_ind][:, :, self.s_t[1]: self.s_t[2] - 50],
-            self.spk[conds[1]][dat[0]][self.lv_ind][:, :, self.s_t[1]: self.s_t[2] - 50]
-        )) * (pq.ms ** -1)
+            self.spk[conds[0]][dat[0]][self.lv_ind]
+            [:, :, self.s_t[1]: self.s_t[2] - 50],
+            self.spk[conds[1]][dat[0]][self.lv_ind]
+            [:, :, self.s_t[1]: self.s_t[2] - 50]
+            )) * (pq.ms ** -1)
         s_raster.units = pq.s ** -1
 
         l_seg = np.hstack((
-            self.lfp[conds[0]][dat[1]][self.lv_ind][:, :, self.l_t[1]: self.l_t[2] - 50],
-            self.lfp[conds[1]][dat[1]][self.lv_ind][:, :, self.l_t[1]: self.l_t[2] - 50]
-        )) * pq.microvolt
+            self.lfp[conds[0]][dat[1]][self.lv_ind]
+            [:, :, self.l_t[1]: self.l_t[2] - 50],
+            self.lfp[conds[1]][dat[1]][self.lv_ind]
+            [:, :, self.l_t[1]: self.l_t[2] - 50]
+            )) * pq.microvolt
 
         l_seg.units = pq.mV
 
@@ -317,7 +339,7 @@ class Offset:
         thrs = [
             np.mean(s_seg_mean, axis=1) + 6 * np.std(s_seg_mean, axis=1),
             np.mean(l_seg_mean, axis=1) - 5 * np.std(l_seg_mean, axis=1)
-        ]
+            ]
         return thrs
 
 
@@ -366,7 +388,7 @@ def lfp_index_nnm(t1, t2=0, types=0):
 
         inds = int(np.round(
             t1 * (sr / 1000) + int((t2 * sr / 1000))
-        ))
+            ))
     else:
         print("you didn't choose the right types")
         raise
@@ -483,7 +505,7 @@ def lfp_plot(ax, t, lfp, conf, xticks, yticks, c_type):
         conf1[0],
         conf1[1],
         alpha=.2
-    )
+        )
     ax.set_yticks(yticks)
     ax.set_xticks(xticks)
 
@@ -506,22 +528,22 @@ def setups(cond):
     return names, tmax, nn_title, wn_title
 
 
-def freq_find(data, find, type='spk'):
+def freq_find(data, find, type_='spk'):
     """
 
     :param data: frequency profile type data
     :param find: index for edges of notch frequencies
-    :param type: spk/lfp
+    :param type_: spk/lfp
     :return: max activity freq index within notch
     """
     fi = find[0]
     ff = find[1] + 1
 
-    if type == 'spk':
+    if type_ == 'spk':
         d_max = np.max(data[fi:ff])
         ind = [i for i, x in enumerate(data) if x == d_max and fi <= i < ff][0]
 
-    elif type == 'lfp':
+    elif type_ == 'lfp':
         d_min = np.min(data[fi:ff])
         ind = [i for i, x in enumerate(data) if x == d_min and fi <= i < ff][0]
 
@@ -533,14 +555,14 @@ def freq_find(data, find, type='spk'):
     return ind
 
 
-def layer_mean(data, layer, type='spk', cond='3_1'):
+def layer_mean(data, layer, type_='spk', cond_='3_1'):
     """
     Actually, this returns quartile and median of input data.
 
     :param data: data of each condition. e.g. nn_3_1 data
     :param layer: specific layer name you want to choose e.g. supr, gran,
     infr for supragranular, granular, and infragranular layer
-    :param type: the data type you are processing: 'spk' or 'lfp'
+    :param type_: the data type you are processing: 'spk' or 'lfp'
     :return: the list contains quartile values ([lower, upper]), max peak
     value, the index of the max peak value
     """
@@ -556,20 +578,18 @@ def layer_mean(data, layer, type='spk', cond='3_1'):
     choose between 3000 - 3100 ms window to find the max peak
 
     """
-    ti = 0
-    tf = 0
     p_ind = 0
     peak = 0
 
-    if cond == '3_1':
-        if type == 'spk':
+    if cond_ == '3_1':
+        if type_ == 'spk':
             ti = 3000
             tf = 3101
             peak = np.max(med[ti:tf])  # peak value
             p_ind = [x for x in np.argwhere(med == peak) if 3000 < x <
                      3101][0]
 
-        elif type == 'lfp':
+        elif type_ == 'lfp':
             ti = lfp_index(3000)
             tf = lfp_index(3101)
             p_min = np.min(med[ti:tf])  # peak value
@@ -582,14 +602,14 @@ def layer_mean(data, layer, type='spk', cond='3_1'):
             print("you forgot to add a type of your data")
         # p_ind, ind of offset peak: for finding quartile value at max peak time
         # point.
-    elif cond == '1_1':
-        if type == 'spk':
+    elif cond_ == '1_1':
+        if type_ == 'spk':
             ti = 1000
             tf = 1101
             peak = np.max(med[ti:tf])  # peak value
             p_ind = [x for x in np.argwhere(med == peak) if 3000 < x < 3101][0]
 
-        elif type == 'lfp':
+        elif type_ == 'lfp':
             ti = lfp_index(1000)
             tf = lfp_index(1101)
             p_min = np.min(med[ti:tf])  # peak value
@@ -615,7 +635,7 @@ def p_to_p(ctrl, nn, cbase, nbase, ind):
     pc = np.abs(ctrl[ind] - cbase[ind])
     pn = np.abs(nn[ind] - nbase[ind])
 
-    diff = (pn - pc) / pc
+    diff_ = (pn - pc) / pc
     # if ctrl[ind] != np.max(ctrl):
     #     pc = np.abs(ctrl[ind] - np.max(ctrl))
     # elif ctrl[ind] == np.max(ctrl):
@@ -626,7 +646,7 @@ def p_to_p(ctrl, nn, cbase, nbase, ind):
     # elif nn[ind] == np.max(nn):
     #     pn = np.abs(nn[ind] - nn[ind - 1])
 
-    return diff
+    return diff_
 
 
 def diff(data, layer, lv, cn, cs, ind=None, bdata=None, types='spk',
@@ -644,12 +664,11 @@ def diff(data, layer, lv, cn, cs, ind=None, bdata=None, types='spk',
     :param fqtype: type of the frequency of interest: 'edge', 'center'
     :return: median value of that specific layer, level, frequecny
     """
-    global tempm, tempe2, tempe7
     tempc = data[cs][layer][lv]
     tempn = data[cn][layer][lv]
 
     tempr = []
-    meann = []
+    # meann = []
     if fqtype == 'edge':
         for ani in range(len(tempn)):
             if types == 'spk':
@@ -660,19 +679,19 @@ def diff(data, layer, lv, cn, cs, ind=None, bdata=None, types='spk',
                 tembn = bdata[cn][layer][lv]
                 tempr.append(
                     p_to_p(tempc[ani], tempn[ani], tembc[ani], tembn[ani], ind)
-                )
+                    )
             else:
                 print("you forgot to indicate which kind of data it is")
                 raise ValueError
 
-        tempm = np.median(np.array(tempr), axis=0)  # dissertation for
+        tempm_ = np.median(np.array(tempr), axis=0)  # dissertation for
         # median
 
-        tempe2 = np.percentile(np.array(tempr), 25, axis=0)  # dissertation for
+        tempe2_ = np.percentile(np.array(tempr), 25, axis=0)  # dissertation for
         # quartile, 0.25
-        tempe7 = np.percentile(np.array(tempr), 75, axis=0)  # dissertation for
+        tempe7_ = np.percentile(np.array(tempr), 75, axis=0)  # dissertation for
         # quartile, 0.75
-        return tempm, tempe2, tempe7, tempr
+        # return tempm_, tempe2_, tempe7_, tempr
 
     elif fqtype == 'center':
         find = finx
@@ -685,11 +704,11 @@ def diff(data, layer, lv, cn, cs, ind=None, bdata=None, types='spk',
                 tempr.append(
                     (tempn[ani][fm[ani]] - tempc[ani][fm[ani]])
                     / tempc[ani][fm[ani]]
-                )
+                    )
 
         elif types == 'lfp':
             for ani in range(len(tempn)):
-                fm.append(freq_find(tempn[ani], find, type='lfp'))
+                fm.append(freq_find(tempn[ani], find))
 
             for ani in range(len(tempn)):
                 tembc = bdata[cs][layer][lv]
@@ -697,19 +716,22 @@ def diff(data, layer, lv, cn, cs, ind=None, bdata=None, types='spk',
                 tempr.append(
                     p_to_p(tempc[ani], tempn[ani], tembc[ani],
                            tembn[ani], fm[ani])
-                )
+                    )
         else:
             print("you forgot to indicate which kind of data it is")
             raise ValueError
 
-        tempm = np.median(np.array(tempr), axis=0)  # dissertation for
+        tempm_ = np.median(np.array(tempr), axis=0)  # dissertation for
         # median
 
-        tempe2 = np.percentile(np.array(tempr), 25, axis=0)  # dissertation for
+        tempe2_ = np.percentile(np.array(tempr), 25, axis=0)  # dissertation for
         # quartile, 0.25
-        tempe7 = np.percentile(np.array(tempr), 75, axis=0)  # dissertation for
+        tempe7_ = np.percentile(np.array(tempr), 75, axis=0)  # dissertation for
         # quartile, 0.75
-        return tempm, tempe2, tempe7, tempr
+    else:
+        print('fqtype is not assigned to any options')
+        raise ValueError
+    return tempm_, tempe2_, tempe7_, tempr
 
 
 def diff_on_off(data, layer, lv, cn, cs, cnon, bdata=None, types='spk'):
@@ -725,7 +747,6 @@ def diff_on_off(data, layer, lv, cn, cs, cnon, bdata=None, types='spk'):
     :param types: type of the data: 'spk', 'lfp'
     :return: median value of that specific layer, level, frequecny
     """
-    global tempm, tempe2, tempe7
     tempc = data[cs][layer][lv]
     tempn = data[cn][layer][lv]
     dnon = data[cnon][layer][lv]
@@ -742,10 +763,10 @@ def diff_on_off(data, layer, lv, cn, cs, cnon, bdata=None, types='spk'):
             tempr.append(
                 (tempn[ani][fm[ani]] - tempc[ani][fm[ani]])
                 / tempc[ani][fm[ani]]
-            )
+                )
     elif types == 'lfp':
         for ani in range(len(dnon)):
-            fm.append(freq_find(dnon[ani], find, type='lfp'))
+            fm.append(freq_find(dnon[ani], find))
 
         for ani in range(len(tempn)):
             tembc = bdata[cs][layer][lv]
@@ -753,7 +774,7 @@ def diff_on_off(data, layer, lv, cn, cs, cnon, bdata=None, types='spk'):
             tempr.append(
                 p_to_p(tempc[ani], tempn[ani], tembc[ani],
                        tembn[ani], fm[ani])
-            )
+                )
     else:
         print("you forgot to indicate which kind of data it is")
         raise ValueError
@@ -780,7 +801,7 @@ def layer_average(data, layer_number):
         data[layer_number[0][0]:layer_number[0][1]],
         data[layer_number[1][0]:layer_number[1][1]],
         data[layer_number[2][0]:layer_number[2][1]]
-    ]
+        ]
     l_average = [
         np.mean(layer[0], axis=0),
         np.mean(layer[1], axis=0),
@@ -789,13 +810,13 @@ def layer_average(data, layer_number):
     return l_average
 
 
-def fp_wilcoxon(data, find, type='center'):
-    if type == 'edge':
+def fp_wilcoxon(data, find, type_='center'):
+    if type_ == 'edge':
         dat = [np.transpose(data[0])[find], np.transpose(data[1])[find]]
         test = stats.wilcoxon(dat[0], dat[1])
         return [find, test[1]]
 
-    elif type == 'center':
+    elif type_ == 'center':
         datc = []
         datn = []
 
@@ -841,9 +862,9 @@ def dat_unit(data, types='lfp'):
     return data
 
 
-def nn_threshold(data, t_ind, ratio, types):
-    m = np.mean(data[t_ind[0]:t_ind[1] + 1])
-    sd = np.std(data[t_ind[0]:t_ind[1] + 1])
+def nn_threshold(data, t_ind_, ratio, types):
+    m = np.mean(data[t_ind_[0]:t_ind_[1] + 1])
+    sd = np.std(data[t_ind_[0]:t_ind_[1] + 1])
 
     if types == 'spk':
         thr = m + ratio * sd
@@ -888,7 +909,7 @@ def nn_csd(data):
         'sigma': sigma,
         'f_type': 'gaussian',
         'f_order': (3, 1)
-    }
+        }
 
     fil_csd = icsd.estimate_csd(**lfp_input)[1]
     csd = np.transpose(fil_csd / fil_csd.units) * fil_csd.units

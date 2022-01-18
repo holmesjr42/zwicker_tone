@@ -9,7 +9,6 @@ sys.path.insert(1, str(tool_path))
 import platform
 import numpy as np
 import h5py
-
 import matplotlib.pyplot as plt
 from parameter import parameters as pm
 from tools import nnm_plot as nnmp
@@ -41,10 +40,7 @@ data_path = 'OneDrive/Work/PhD/projects/zwicker_tone_2018_2021' \
             '/data/dataset/nnm_spk_lfp_avg'
 file_name = 'cr79_200211_spk_lfp_avg_nnm.hdf5'
 
-if platform.node() == 'DESKTOP-K2A53B8':
-    partition = 'D:/'
-else:
-    raise ValueError('There is no partition for the data path.')
+partition = pm.data_path_selection()
 
 file_input = os.path.join(partition, data_path, file_name)
 
@@ -133,7 +129,8 @@ for i in range(len(lvp)):
     for j in range(len(axes)):
         cbar = nnmp.colorbar_set(
             s_fig, axes[j], s_img[i], 'spk', vmax=mx[1], ori='horizontal'
-        )
+            )
+
         if i != len(lvp) - 1:
             nnmp.remove_colorbar(s_fig)
 

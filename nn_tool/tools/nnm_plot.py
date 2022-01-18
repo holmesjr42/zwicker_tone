@@ -236,7 +236,7 @@ def tdh_plot(aax, dats, image_list, cm, hc='white'):
     img = aax.imshow(
         dats, cmap=cm, aspect=101 / 1500, extent=[0, 101, 1500, 0],
         interpolation='gaussian'
-    )
+        )
     image_list.append(img)
 
     # layer IV line
@@ -257,13 +257,13 @@ def cbar_t(cbar, types):
         cbar.set_label(
             r'mV',
             labelpad=15, size=9
-        )
+            )
 
     elif types == 'tsp':
         cbar.set_label(
             r'% Firing rate',
             labelpad=15, size=9
-        )
+            )
 
 
 # normalize the heatmap
@@ -283,7 +283,7 @@ def norm_color(img, types, ratio):
         #     )
         vmin = np.round(
             min(ims.get_array().min() for ims in img) * ratio, decimals=2
-        )
+            )
         vmax = -vmin
         norm = colors.TwoSlopeNorm(vcenter=0, vmin=vmin, vmax=vmax)
 
@@ -291,7 +291,7 @@ def norm_color(img, types, ratio):
         vmin = 0
         vmax = np.round(
             max(ims.get_array().max() for ims in img) * ratio, decimals=-1
-        )
+            )
         print(vmax)
         norm = colors.Normalize(vmin=vmin, vmax=vmax)
 
@@ -299,17 +299,17 @@ def norm_color(img, types, ratio):
         vmax = max(
             max(ims.get_array().max() for ims in img),
             np.abs(min(ims.get_array().min() for ims in img))
-        ) * ratio
+            ) * ratio
         vmin = (-1) * vmax
         norm = colors.Normalize(vmin=vmin, vmax=vmax)
 
     elif types == 'd_spk':
         mx = np.round(
             max(ims.get_array().max() for ims in img) * ratio, decimals=-1
-        )
+            )
         mn = np.round(
             min(ims.get_array().min() for ims in img) * ratio, decimals=-1
-        )
+            )
         vmax = np.max([np.abs(mx), np.abs(mn)])
         vmin = -vmax
         norm = colors.TwoSlopeNorm(vcenter=0, vmin=vmin, vmax=vmax)
@@ -317,10 +317,10 @@ def norm_color(img, types, ratio):
     elif types == 'd_lfp':
         mx = np.round(
             max(ims.get_array().max() for ims in img) * ratio, decimals=2
-        )
+            )
         mn = np.round(
             min(ims.get_array().min() for ims in img) * ratio, decimals=2
-        )
+            )
         vmax = np.max([np.abs(mx), np.abs(mn)])
         vmin = -vmax
         norm = colors.TwoSlopeNorm(vcenter=0, vmin=vmin, vmax=vmax)
@@ -404,7 +404,7 @@ def colorbar_set(fig, axs, img, types, vmax=0, vmin=0, ori='vertical'):
             format='%.2f',
             fraction=0.02,
             ticks=ticklist
-        )
+            )
         cbart.set_label('Voltage ' + r'(mV)', labelpad=5, size=18)
 
     elif types == 'spk':
@@ -415,7 +415,7 @@ def colorbar_set(fig, axs, img, types, vmax=0, vmin=0, ori='vertical'):
             format='%.0f',
             fraction=0.02,
             ticks=ticklist
-        )
+            )
         cbart.set_label('Firing rate (spk / s)', labelpad=5, size=18)
 
     elif types == 'csd':
@@ -426,7 +426,7 @@ def colorbar_set(fig, axs, img, types, vmax=0, vmin=0, ori='vertical'):
             format='%.1f',
             fraction=0.02,
             ticks=ticklist
-        )
+            )
         cbart.set_label(r'mV/$mm^{2}$', labelpad=5, size=18)
 
     elif types == 'd_spk':
@@ -437,7 +437,7 @@ def colorbar_set(fig, axs, img, types, vmax=0, vmin=0, ori='vertical'):
             format='%.0f',
             fraction=0.02,
             ticks=ticklist
-        )
+            )
         cbart.set_label('Firing rate (spk / s)', labelpad=5, size=18)
 
     elif types == 'd_lfp':
@@ -448,7 +448,7 @@ def colorbar_set(fig, axs, img, types, vmax=0, vmin=0, ori='vertical'):
             format='%.2f',
             fraction=0.02,
             ticks=ticklist
-        )
+            )
         cbart.set_label('Amplitude ' + r'(mV)', labelpad=5, size=18)
 
     else:
@@ -463,12 +463,12 @@ def colorbar_set(fig, axs, img, types, vmax=0, vmin=0, ori='vertical'):
 
 def remove_colorbar(fig):
     """
-
     :param fig: main figure
+    remove colorbar from the subplots of the main figure
     """
     fig.ax_dict = {
         ax.get_label(): ax for ax in plt.figure(0).axes
-    }
+        }
     fig.ax_dict["<colorbar>"].set_visible(False)
 
 
@@ -479,7 +479,7 @@ def csd_calc(x, f_type, f_order):
         'sigma': sigma,
         'f_type': f_type,
         'f_order': f_order
-    }
+        }
 
     std = icsd.estimate_csd(**std_input)
 
@@ -505,8 +505,9 @@ def heat_plot(x, axs, img, zoom='no', z_range=None, z_img=None, clmap=None,
     """
     if not clmap or not hcolor:
         raise ValueError(
-            "you didn't choose which color you want to use for heatmap and reference line in a plot. "
-            "Choose color for clmap and hcolor")
+            "you didn't choose which color you want to use for heatmap and "
+            "reference line in a plot. Choose color for clmap and hcolor"
+            )
 
     x = x / x.units
 
@@ -521,7 +522,7 @@ def heat_plot(x, axs, img, zoom='no', z_range=None, z_img=None, clmap=None,
     imag = axs.imshow(
         x, cmap=clmap, aspect=213 / 1500,
         extent=[0, 200, 1500, 0], interpolation='gaussian'
-    )
+        )
     img.append(imag)
     # aspect: the number of elements in x-axis
 
@@ -543,7 +544,7 @@ def heat_plot(x, axs, img, zoom='no', z_range=None, z_img=None, clmap=None,
         # zoom area mark
         patch, pp1, pp2 = mark_inset(
             axs, axins, loc1=2, loc2=2, fc="none", ec="0.5"
-        )
+            )
         pp1.loc1 = 2
         pp1.loc2 = 3
         pp2.loc1 = 3
