@@ -1,17 +1,18 @@
 import os
 import sys
-
-
-sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
-print(sys.path)
-import numpy as np
-import matplotlib.pyplot as plt
-from parameter import parameters as pm
 import h5py
-from tools import nnm_plot as nnmp
+
+import numpy as np
+
+import matplotlib.pyplot as plt
 import pylustrator
 import quantities as pq
 
+sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
+print(sys.path)
+
+from nn_tool.parameter import parameters as pm
+from nn_tool.tools import nnm_plot as nnmp
 
 pylustrator.start()
 sys.path.pop(1)
@@ -31,9 +32,14 @@ ccmap = param.hcmap
 lcolor = param.ref_line_color
 lvl = com.db['lv']  # SPLdB list
 
+# load data
+data_path = 'OneDrive/Work/PhD/projects/zwicker_tone_2018_2021' \
+            '/data/dataset/nnm_spk_lfp_avg'
+file_name = 'all_spk_lfp_avg_nnm.hdf5'
+partition = pm.data_path_selection()
 
-file_input = '/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021' \
-             '/data/dataset/nnm_spk_lfp_avg/all_spk_lfp_avg_nnm.hdf5'
+file_input = os.path.join(partition, data_path, file_name)
+
 # file_input = snakemake.input[0]
 
 # getting animal cr number

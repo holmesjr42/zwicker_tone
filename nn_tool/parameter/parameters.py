@@ -12,22 +12,27 @@ import seaborn as sns
 data_path = 'OneDrive/Work/PhD/projects/zwicker_tone_2018_2021/data/'
 param_path_ = pathlib.Path(__file__).parents[2] / "nn_tool/parameter"
 param_path = str(param_path_)
+desktop_list = {'DESKTOP-K2A53B8': 'D:\\', 'DESKTOP-SDAA-AURORA': 'd:\\'}
 
 
 def data_path_selection():
-    if platform.node() == 'DESKTOP-K2A53B8':
-        partition = 'D:/'
-    elif platform.node() == 'DESKTOP-SDAA-AURORA':
-        if platform.system() == 'Windows':
-            partition = 'D:/'
-        else:
-            raise ValueError(
-                f'This script is not available for the system {platform.system()}'
-                f'in {platform.node()}'
-                )
+    platform_ = platform.node()
+    system_ = platform.system()
+    d_list = list(desktop_list.keys())
+    if system_ == 'Windows':
+        if any(platform_ in d_name for d_name in list(desktop_list.keys())):
+            for d_name in d_list:
+                if platform_ in d_name:
+                    partition_ = desktop_list[d_name]
+                    return partition_
+
+                else:
+                    continue
     else:
-        raise ValueError('There is no partition for the data path.')
-    return partition
+        raise ValueError(
+            f'This script is not available for the system: '
+            f'{platform.system()} in {platform.node()}'
+            )
 
 
 partition = data_path_selection()
@@ -37,8 +42,7 @@ sr_lfp = 1061.48  # lfp sampling rate, Hz
 
 
 class Commonfeat:
-    with open(param_path + '/animal_dB_coord.pk',
-              'rb') as a_coord:
+    with open(param_path + '/animal_dB_coord.pk', 'rb') as a_coord:
         db = pickle.load(a_coord)
 
     list_freq = np.load(param_path + '/list_freq.npy', allow_pickle=True)
@@ -47,23 +51,29 @@ class Commonfeat:
     f_path = file_path
 
     # animal/data folder name
-    animals = ['cr29_190228', 'cr30_190305', 'cr31_190312', 'cr33_190321',
-               'cr50_190724', 'cr79_200211', 'cr90_201023', 'cr92_201029',
-               'cr93_201110', 'cr94_201112', 'cr95_201117']
+    animals = [
+        'cr29_190228', 'cr30_190305', 'cr31_190312', 'cr33_190321',
+        'cr50_190724', 'cr79_200211', 'cr90_201023', 'cr92_201029',
+        'cr93_201110', 'cr94_201112', 'cr95_201117'
+        ]
 
-    p_info = np.load(param_path + '/time_index_multi_tones_500ms_180s.npy',
-                     allow_pickle=True)
+    p_info = np.load(
+        param_path + '/time_index_multi_tones_500ms_180s.npy', allow_pickle=True
+        )
 
     octaves = np.array(
-        [-1.5, -1.38, -1.25, -1.13, -1, -0.88, -0.75, -0.63, -0.5,
-         -0.37, -0.25, -0.13, 0, 0.12, 0.25, 0.38, 0.5, 0.63, 0.75,
-         0.87, 1, 1.12, 1.25, 1.37, 1.5])
+        [
+            -1.5, -1.38, -1.25, -1.13, -1, -0.88, -0.75, -0.63, -0.5, -0.37,
+            -0.25, -0.13, 0, 0.12, 0.25, 0.38, 0.5, 0.63, 0.75, 0.87, 1, 1.12,
+            1.25, 1.37, 1.5
+            ])
 
     # best f for each animal
-    bf = [6727, 9514, 8724, 5657, 2828,
-          7336, 8000, 2594, 20749, 1834,
-          8724, 8000
-          ]
+    bf = [
+        6727, 9514, 8724, 5657, 2828,
+        7336, 8000, 2594, 20749, 1834,
+        8724, 8000
+        ]
     # best f dict
     bf_dic = {
         'cr29': 6727, 'cr30': 9514, 'cr31': 8724, 'cr33': 5657,
@@ -76,8 +86,8 @@ class Commonfeat:
     # channel represents supr, gran, infra layer
     ch_l = [3, 7, 11]
     ch_list = [[0, 6], [6, 9], [9, 16]]
-    # # activity time window for each animal
-    # tw = [[12, 46], [10, 41], [10, 41], [10, 41], [10, 38], [10, 31], [10, 41]]
+    # # activity time window for each animal tw = [[12, 46], [10, 41], [10,
+    # 41], [10, 41], [10, 38], [10, 31], [10, 41]]
 
 
 """
@@ -297,21 +307,23 @@ class Setup:
         """
         :param ch: channels you want to use
         :param ch_offset: channels you want to use for offset analysis
-        :param hcmap_mode: color scheme for different heatmaps---choose 'spk', 'lfp', or 'csd' for the right color
+        :param hcmap_mode: color scheme for different heatmaps---choose 'spk',
+        'lfp', or 'csd' for the right color
         :param mode: if you want to have fun, set it 'fun'
         """
 
-        depths = ['0', '100', '200', '300', '400', '500', '600', '700',
-                  '800', '900', '1000', '1100', '1200', '1300', '1400', '1500']
-
-        l_color = ['#e6e6e6', '#4e69ab']
+        depths = [
+            '0', '100', '200', '300', '400', '500', '600', '700',
+            '800', '900', '1000', '1100', '1200', '1300', '1400', '1500'
+            ]
 
         descrete_cmap = None
 
         depth = []
 
         hcmap = None
-        ref_line_color = None  # line color for axh/axvline for notch band and granular layer
+        ref_line_color = None
+        # line color for axh/axvline for notch band and granular layer
 
         c_n = ['nnm_3_0', 'nnm_3_1', 'nnm_1_1']
         c_s = ['nnm_3_0_strf', 'nnm_3_1_strf', 'nnm_1_1_strf']
@@ -324,8 +336,9 @@ class Setup:
         cc_s_onoff = ['nnm_3_1_strf', 'nnm_1_1_strf']
         cw_s_onoff = ['nnm_wn_3_1_strf', 'nnm_wn_1_1_strf']
 
-        layer_name = ['Supragranular\nlayer', 'Granular\nlayer',
-                      'Infragranular\nlayer']
+        layer_name = [
+            'Supragranular\nlayer', 'Granular\nlayer', 'Infragranular\nlayer'
+            ]
 
         layer_num = [[0, 6], [6, 9], [9, 16]]  # index for each layer's
         # start-end points
@@ -392,34 +405,39 @@ class Setup:
             elif hcmap_mode == 'csd':
                 hcmap = ListedColormap(sns.color_palette("icefire_r", 256))
             else:
-                print('You did not choose right option for a color scheme, '
-                      'set -ccmap- between spk, lfp, or csd.')
+                print(
+                    'You did not choose right option for a color scheme, '
+                    'set -ccmap- between spk, lfp, or csd.'
+                    )
 
         elif mode == 'fun':
             descrete_cmap = ['cyan', 'magenta', 'yellow', 'lime', 'darkorchid']
-            ref_line_color = 'magenta'
+            ref_line_color = 'k'
             if hcmap_mode is None or hcmap_mode == 'spk':
                 hcmap = 'cool'
             elif hcmap_mode == 'lfp':
-                hcmap = 'turbo'
+                hcmap = 'spring_r'
                 # "vlag" "icefire"
             elif hcmap_mode == 'csd':
                 hcmap = 'turbo_r'
             else:
-                print('You did not choose the right option for a color '
-                      'scheme, set -ccmap- between spk, lfp, or csd.')
+                print(
+                    'You did not choose the right option for a color scheme, '
+                    'set -ccmap- between spk, lfp, or csd.')
                 raise ValueError
 
         else:
-            print('You did not choose the right option for the mode. Choose '
-                  'fun if you want to have fun')
+            print(
+                'You did not choose the right option for the mode. Choose '
+                'fun if you want to have fun'
+                )
 
         for i in ch:
             depth.append(depths[i])
 
         self.depth = depth
         self.hcmap = hcmap
-        self.d_camp = descrete_cmap
+        self.d_cmap = descrete_cmap
         self.ref_line_color = ref_line_color
         self.ch = ch
         self.ch_offset = ch_offset
@@ -428,10 +446,14 @@ class Setup:
 class Nn:
 
     def __init(self):
-        ind_3_1 = [np.arange(0, 180000 - 4000 + 1, 4000),
-                   np.arange(4000, 180000 + 1, 4000)]
-        ind_1_1 = [np.arange(0, 180000 - 2000 + 1, 2000),
-                   np.arange(2000, 180000 + 1, 2000)]
+        ind_3_1 = [
+            np.arange(0, 180000 - 4000 + 1, 4000),
+            np.arange(4000, 180000 + 1, 4000)
+            ]
+        ind_1_1 = [
+            np.arange(0, 180000 - 2000 + 1, 2000),
+            np.arange(2000, 180000 + 1, 2000)
+            ]
 
         names = [
             'nn_3_1', 'nn_wn_3_1', 'nn_1_1', 'nn_wn_1_1',
@@ -440,8 +462,8 @@ class Nn:
         db = ['70', '60']  # SPL of nn_offset
 
         l_dat = ['mean', 'q27']  # lfp session mean/confidence interval
-        s_dat = ['rastor', 'psth', 's_psth',
-                 'time']  # spk session rastor, psths, time
+        s_dat = ['rastor', 'psth', 's_psth', 'time']
+        # spk session rastor, psths, time
 
         self.ind_3_1 = ind_3_1
         self.ind_1_1 = ind_1_1

@@ -1,14 +1,19 @@
 import os
 import sys
-
-sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
+import pathlib
+import h5py
 
 import numpy as np
+
 import matplotlib.pyplot as plt
-from parameter import parameters as pm
-import h5py
 import pylustrator
-from tools import nn_tool as nt
+
+# add path to the tool directory to sys.path
+tool_path = pathlib.Path(__file__).parents[2] / "nn_tool"
+sys.path.insert(1, str(tool_path))
+
+from nn_tool.tools import nn_tools as nt
+from nn_tool.parameter import parameters as pm
 
 pylustrator.start()
 sys.path.pop(1)
@@ -25,31 +30,37 @@ nns = pm.Nnsifeat
 com = pm.Commonfeat
 
 # some setups for plotting e.g. color scheme
-val = pm.Setup(cond='nnm_3_0', cond2='tsp', mode=1)
-mode, ylc, condc, condt, nb, ch, depth, dcmap, ws, hs, rt, cct, cb, ccmap = \
-    val.values()
+val = pm.Setup(hcmap_mode='spk', mode='fun')
+# mode, ylc, condc, condt, nb, ch, depth, dcmap, ws, hs, rt, cct, cb, ccmap = \
+#     val.values()
 lvl = com.db['lv']  # SPLdB list
-sets = val.extra_setup()
 
-file_input = '/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021' \
-             '/data/dataset/fp_layer/fp_layer_nnm_3_0.hdf5'
+# load data
+data_path = 'OneDrive\\Work\\PhD\\projects\\zwicker_tone_2018_2021' \
+            '\\data\\dataset\\fp_layer'
+file_name = 'fp_layer_nnm_3_0.hdf5'
+
+partition = pm.data_path_selection()
+
+file_input = os.path.join(partition, data_path, file_name)
+
 # file_input = snakemake.input[0]
 
 # stimulus conditions for this script
-cn = sets[7][0]
-cs = sets[8][0]
+cn = val.c_n[0]
+cs = val.c_s[0]
 
 # layer name list and dic key list of layers
 # layer_name = sets[0]
-bc_map = [dcmap[1], dcmap[2], dcmap[4]]  # bar plot colour map
+bc_map = [val.d_cmap[1], val.d_cmap[2], val.d_cmap[4]]  # bar plot colour map
 layer_name = ['Supragranular layer', 'Granular layer', 'Infragranular layer']
-l_list = sets[2]
+l_list = val.l_list[2]
 
 # index list of low edge, high edge
-finx = [sets[3][1], sets[3][3]]
+finx = [val.freq[1], val.freq[3]]
 
 # line style for plots
-l_style = sets[5]
+l_style = val.l_style[5]
 
 # dic for difference ratio and quartile 25/75
 ratio = {'spk': {}, 'lfp': {}}
@@ -73,8 +84,6 @@ with h5py.File(file_input, 'r') as dat:
 
                 ratio[r_list[d]][layer].append(temp[0])
                 quan[r_list[d]][layer].append([temp[1], temp[2]])
-
-
 
 # plot start
 
@@ -110,145 +119,64 @@ for i in range(len(r_list)):
     b_axs[i].tick_params(axis='y', which='major', labelsize=15)
     b_axs[i].tick_params(axis='x', which='major', labelsize=20)
 
-b_axs[0].legend(prop={'size': 13},
-                loc='upper left',
-                bbox_to_anchor=(0, 1))
+b_axs[0].legend(
+    prop={'size': 13},
+    loc='upper left',
+    bbox_to_anchor=(0, 1)
+    )
 
-b_axs[0].text(0, 0.5, 'Ratio of changes\nto control',
-              horizontalalignment='center',
-              verticalalignment='center',
-              rotation='vertical',
-              transform=b_axs[0].transAxes,
-              fontdict={'weight': 'bold', 'size': 25}
-              )
+b_axs[0].text(
+    0, 0.5, 'Ratio of changes\nto control',
+    horizontalalignment='center',
+    verticalalignment='center',
+    rotation='vertical',
+    transform=b_axs[0].transAxes,
+    fontdict={'weight': 'bold', 'size': 25}
+    )
 
-b_axs[0].text(0.5, 0, 'dB SPL',
-              horizontalalignment='center',
-              verticalalignment='center',
-              # rotation='vertical',
-              transform=b_axs[0].transAxes,
-              fontdict={'weight': 'bold', 'size': 25}
-              )
+b_axs[0].text(
+    0.5, 0, 'dB SPL',
+    horizontalalignment='center',
+    verticalalignment='center',
+    # rotation='vertical',
+    transform=b_axs[0].transAxes,
+    fontdict={'weight': 'bold', 'size': 25}
+    )
 
-b_axs[0].text(0.5, 1, 'SPK',
-              horizontalalignment='center',
-              verticalalignment='center',
-              rotation='horizontal',
-              transform=b_axs[0].transAxes,
-              fontdict={'weight': 'bold', 'size': 25}
-              )
+b_axs[0].text(
+    0.5, 1, 'SPK',
+    horizontalalignment='center',
+    verticalalignment='center',
+    rotation='horizontal',
+    transform=b_axs[0].transAxes,
+    fontdict={'weight': 'bold', 'size': 25}
+    )
 
-b_axs[1].text(0, 0.5, 'Ratio peak to peak\nchanges to control',
-              horizontalalignment='center',
-              verticalalignment='center',
-              rotation='vertical',
-              transform=b_axs[1].transAxes,
-              fontdict={'weight': 'bold', 'size': 25}
-              )
+b_axs[1].text(
+    0, 0.5, 'Ratio peak to peak\nchanges to control',
+    horizontalalignment='center',
+    verticalalignment='center',
+    rotation='vertical',
+    transform=b_axs[1].transAxes,
+    fontdict={'weight': 'bold', 'size': 25}
+    )
 
-b_axs[1].text(0.5, 0, 'dB SPL',
-              horizontalalignment='center',
-              verticalalignment='center',
-              # rotation='vertical',
-              transform=b_axs[1].transAxes,
-              fontdict={'weight': 'bold', 'size': 25}
-              )
+b_axs[1].text(
+    0.5, 0, 'dB SPL',
+    horizontalalignment='center',
+    verticalalignment='center',
+    # rotation='vertical',
+    transform=b_axs[1].transAxes,
+    fontdict={'weight': 'bold', 'size': 25}
+    )
 
-b_axs[1].text(0.5, 1, 'LFP',
-              horizontalalignment='center',
-              verticalalignment='center',
-              rotation='horizontal',
-              transform=b_axs[1].transAxes,
-              fontdict={'weight': 'bold', 'size': 25}
-              )
+b_axs[1].text(
+    0.5, 1, 'LFP',
+    horizontalalignment='center',
+    verticalalignment='center',
+    rotation='horizontal',
+    transform=b_axs[1].transAxes,
+    fontdict={'weight': 'bold', 'size': 25}
+    )
 
-#% start: automatic generated code from pylustrator
-plt.figure(0).ax_dict = {ax.get_label(): ax for ax in plt.figure(0).axes}
-import matplotlib as mpl
-plt.figure(0).axes[0].set_position([0.113171, 0.270000, 0.352273, 0.458021])
-plt.figure(0).axes[0].texts[0].set_position([-0.197029, 0.500000])
-plt.figure(0).axes[0].texts[1].set_position([0.500000, -0.180915])
-plt.figure(0).axes[0].texts[2].set_position([0.500000, 1.042550])
-plt.figure(0).axes[1].set_position([0.615399, 0.270000, 0.352273, 0.458021])
-plt.figure(0).axes[1].texts[0].set_position([-0.227245, 0.500000])
-plt.figure(0).axes[1].texts[1].set_position([0.500000, -0.180915])
-plt.figure(0).axes[1].texts[2].set_position([0.500000, 1.042550])
-#% end: automatic generated code from pylustrator
 plt.show()
-# s_img = []  # for normalizing heatmap
-#
-# s_fig = plt.figure(0, figsize=(16, 9))
-#
-# s_axs = s_fig.subplots(1, 2)
-# xs = np.arange(len(lvl))
-#
-# # ticks
-# maps = [1, 2, 4]  # plot color selection
-# yticks = [[-0.4, 2.1, 0.4], [-0.2, 1.1, 0.2]]
-# ylims = [[-0.45, 2.1], [-0.3, 1.1]]
-#
-# for i in range(len(r_list)):
-#     dtype = r_list[i]
-#     data = ratio[dtype]
-#     for j in range(len(l_list)):
-#         lname = layer_name[j]
-#         s_axs[i].plot(
-#             xs, data[l_list[j]][0], color=dcmap[maps[j]],
-#             label=lname, lw=5, linestyle=l_style[j], zorder=2
-#             )
-#
-#         s_axs[i].fill_between(xs,
-#                               data[l_list[j]][1],
-#                               data[l_list[j]][2],
-#                               color=dcmap[maps[j]], zorder=1, alpha=0.1)
-#
-#     s_axs[i].set_yticks(np.arange(yticks[i][0], yticks[i][1], yticks[i][2]))
-#     s_axs[i].set_ylim(ylims[i][0], ylims[i][1])
-# #
-#     # extra texts
-#     s_axs[i].text(0.5, 1, r_name[i],
-#                   horizontalalignment='center',
-#                   verticalalignment='center',
-#                   rotation='horizontal',
-#                   transform=s_axs[i].transAxes,
-#                   fontdict={'weight': 'bold', 'size': 25}
-#                   )
-#
-#     s_axs[i].set_xticks(np.arange(4))
-#     s_axs[i].set_xticklabels(['70', '60', '50', '40'])
-#     s_axs[i].tick_params(axis='y', which='major', labelsize=15)
-#     s_axs[i].tick_params(axis='x', which='major', labelsize=20)
-#     s_axs[i].axhline(y=0, c='k', lw=1.5, alpha=0.5, linestyle='dotted',
-#                      zorder=1)
-#
-# s_axs[0].legend(prop={'size': 12},
-#                 loc='upper left',
-#                 bbox_to_anchor=(0, 1))
-#
-# s_axs[0].text(0, 0.5, 'Ratio of changes\nto control',
-#               horizontalalignment='center',
-#               verticalalignment='center',
-#               rotation='vertical',
-#               transform=s_axs[0].transAxes,
-#               fontdict={'weight': 'bold', 'size': 25}
-#               )
-#
-# s_axs[1].text(0, 0.5, 'Ratio of peak to peak\nchanges to control',
-#               horizontalalignment='center',
-#               verticalalignment='center',
-#               rotation='vertical',
-#               transform=s_axs[1].transAxes,
-#               fontdict={'weight': 'bold', 'size': 25}
-#               )
-#
-# #% start: automatic generated code from pylustrator
-# plt.figure(0).ax_dict = {ax.get_label(): ax for ax in plt.figure(0).axes}
-# import matplotlib as mpl
-# plt.figure(0).axes[0].set_position([0.141250, 0.110000, 0.295276, 0.524934])
-# plt.figure(0).axes[0].texts[0].set_position([0.500000, 1.035983])
-# plt.figure(0).axes[0].texts[1].set_position([-0.218017, 0.500000])
-# plt.figure(0).axes[1].set_position([0.551477, 0.110000, 0.295276, 0.524934])
-# plt.figure(0).axes[1].texts[0].set_position([0.500000, 1.035983])
-# plt.figure(0).axes[1].texts[1].set_position([-0.203200, 0.500000])
-# #% end: automatic generated code from pylustrator
-# plt.show()

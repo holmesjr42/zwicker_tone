@@ -1,18 +1,19 @@
-import os
 import sys
-
-sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
+import pathlib
+import h5py
 
 import scipy.signal as scig
-import numpy as np
-import h5py
-# import spike_tools as st
-from parameter import parameters as pm
-import sys
-import quantities as pq
 from scipy import stats
 import statsmodels.stats.weightstats as sms
-from tools import icsd
+import numpy as np
+import quantities as pq
+
+tool_path = pathlib.Path(__file__).parents[2] / "nn_tool"
+sys.path.insert(1, str(tool_path))
+
+# import spike_tools as st
+from nn_tool.parameter import parameters as pm
+import icsd
 import neo.core
 
 sys.path.pop(1)
@@ -21,11 +22,10 @@ sys.path.pop(1)
 # the higher boundary.
 
 cond = [['nn_3_1', 'nn_wn_3_1'], ['nn_1_1', 'nn_wn_1_1']]
-t_ind = [pm.Nn.ind_3_1, pm.Nn.ind_1_1]
-val = pm.Setup(cond='nnm_3_0', cond2='tsp', mode=1)
-crl = val.values()[7]
-sets = val.extra_setup()
-finx = [sets[3][1], sets[3][3]]
+t_ind = [pm.Nn().ind_3_1, pm.Nn().ind_1_1]
+val = pm.Setup(hcmap_mode='spk', mode='fun')
+crl = val.d_cmap
+finx = [val.freq[1], val.freq[3]]
 sr_lfp = 1061.48 * pq.Hz  # lfp sampling rate
 bf_list = pm.Commonfeat.bf_dic
 lvs = ['70', '60']
@@ -133,8 +133,10 @@ class OffsetPrepare:
         elif '1_1' in self.condition:
             ind = t_ind[1]
         else:
-            print('somthing is wrong. check if you choose the right index type '
-                  'for nn condition.')
+            print(
+                'somthing is wrong. check if you choose the right index type '
+                'for nn condition.'
+                )
             raise ValueError
 
         t_total = ind[1][0]
@@ -155,8 +157,9 @@ class OffsetPrepare:
         n_psth = np.mean(n_raster, axis=2) * (pq.ms ** -1)
 
         n_psth.units = pq.s ** -1
-        s_psth = [[np.convolve(filt / filt.sum(), ch, mode='same') for ch in lv]
-                  for lv in n_psth] * (pq.s ** -1)
+        s_psth = [[
+            np.convolve(filt / filt.sum(), ch, mode='same') for ch in lv
+            ] for lv in n_psth] * (pq.s ** -1)
 
         return [n_raster, n_psth, s_psth, t_n]
 
@@ -187,8 +190,8 @@ class OffsetPrepare:
                 for i in range(chs):  # number of channels
                     for j in range(np.size(ind[0])):
                         lfp_segs[k][i][j] = self.lfp[k][i][
-                                            l_ind[0][j].magnitude:t_total_lfp +
-                                                                  l_ind[0][
+                                            l_ind[0][j].magnitude:t_total_lfp
+                                                                  + l_ind[0][
                                                                       j].magnitude + 1
                                             ]
         else:
@@ -215,8 +218,7 @@ def threshold(self):
         raise ValueError
 
     ths = []
-    trf = [150,
-           50]  # time points to calculate reference session (so called
+    trf = [150, 50]  # time points to calculate reference session (so called
     # spontaneous session) range
 
     # test with raster-----------------if you want to test the difference
@@ -231,11 +233,9 @@ def threshold(self):
 
     # lfp = self.lfp_segs[0][0][0][0]
 
-    # lfp2 = lfp[:, :, ti + trf[0]:tf - trf[1]]
-    # print(np.shape(lfp2))
-    # lfp3 = lfp2.reshape(np.shape(lfp2)[0], np.shape(lfp2)[1] * np.shape(lfp2)[2])
-    # print(np.shape(lfp3))
-    # #
+    # lfp2 = lfp[:, :, ti + trf[0]:tf - trf[1]] print(np.shape(lfp2)) lfp3 =
+    # lfp2.reshape(np.shape(lfp2)[0], np.shape(lfp2)[1] * np.shape(lfp2)[2])
+    # print(np.shape(lfp3)) #
     return spk2, spk3
 
 
@@ -275,8 +275,8 @@ class Offset:
         # offset phase, lfp
 
     def threshold(self):
-        dat = ['raster',
-               'segments']  # dic key for spk and lfp to calculate threshold
+        dat = ['raster', 'segments']
+        # dic key for spk and lfp to calculate threshold
         conds = cond[self.cond_ind]
         # dimension of raster/seg data before reshaping:
         # (num. of lv, num. of channel, segments, 1 ms spike bin/ lfp amplitude)
@@ -310,8 +310,8 @@ class Offset:
         return thrs
 
     def threshold_alt(self):
-        dat = ['raster',
-               'segments']  # dic key for spk and lfp to calculate threshold
+        dat = ['raster', 'segments']
+        # dic key for spk and lfp to calculate threshold
         conds = cond[self.cond_ind]
         # dimension of raster/seg data before reshaping:
         # (num. of lv, num. of channel, segments, 1 ms spike bin/ lfp amplitude)
@@ -414,11 +414,13 @@ def m_spectro(l_seg):
         sx_l = []
         rep = len(l_seg[i])
         for j in range(rep):
-            f1, t1, sxr = scig.spectrogram(l_seg[i][j], sr_lfp,
-                                           window=scig.hann(172), nperseg=172)
+            f1, t1, sxr = scig.spectrogram(
+                l_seg[i][j], sr_lfp, window=scig.hann(172), nperseg=17
+                )
             sx = (sxr - np.min(sxr)) / (np.max(sxr) - np.min(sxr))  # scaling
-            sxl = (np.log10(sxr + 1) - np.min(np.log10(sxr + 1))) / \
-                  (np.max(np.log10(sxr + 1)) - np.min(np.log10(sxr + 1)))
+            sxl = (np.log10(sxr + 1) - np.min(np.log10(sxr + 1))) / (
+                    np.max(np.log10(sxr + 1)) - np.min(np.log10(sxr + 1))
+            )
             # scaling log
             sx_a.append(sx)
             sx_l.append(sxl)
@@ -432,9 +434,11 @@ def m_spectro(l_seg):
 
 
 def spect_plot(ax, t, f, sig, images, xticks, yticks):
-    im = ax.pcolormesh(t, f, sig,
-                       cmap='rainbow',
-                       edgecolors='none', shading='flat')
+    im = ax.pcolormesh(
+        t, f, sig, cmap='rainbow',
+        edgecolors='none', shading='flat'
+        )
+
     images.append(im)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
@@ -445,10 +449,12 @@ def spect_plot(ax, t, f, sig, images, xticks, yticks):
     ax.set_xticks(xticks[0])
     # ax.set_yticks(yticks[1], minor=True)
     ax.set_xticks(xticks[1], minor=True)
-    ax.tick_params(axis='both', which='major', labelsize=8, length=2.5,
-                   width=0.5)
-    ax.tick_params(axis='both', which='minor', labelsize=8, length=0.9,
-                   width=0.25)
+    ax.tick_params(
+        axis='both', which='major', labelsize=8, length=2.5, width=0.5
+        )
+    ax.tick_params(
+        axis='both', which='minor', labelsize=8, length=0.9, width=0.25
+        )
 
 
 def psth_plot(ax, t, spikes, xticks, yticks, c_type):
@@ -548,8 +554,9 @@ def freq_find(data, find, type_='spk'):
         ind = [i for i, x in enumerate(data) if x == d_min and fi <= i < ff][0]
 
     else:
-        print("you did not choose the data type. Choose either 'spk' or "
-              "'lfp'.")
+        print(
+            "you did not choose the data type. Choose either 'spk' or 'lfp'."
+            )
         raise ValueError
 
     return ind
@@ -563,6 +570,7 @@ def layer_mean(data, layer, type_='spk', cond_='3_1'):
     :param layer: specific layer name you want to choose e.g. supr, gran,
     infr for supragranular, granular, and infragranular layer
     :param type_: the data type you are processing: 'spk' or 'lfp'
+    :param cond_: condition of noise duration
     :return: the list contains quartile values ([lower, upper]), max peak
     value, the index of the max peak value
     """
@@ -586,8 +594,7 @@ def layer_mean(data, layer, type_='spk', cond_='3_1'):
             ti = 3000
             tf = 3101
             peak = np.max(med[ti:tf])  # peak value
-            p_ind = [x for x in np.argwhere(med == peak) if 3000 < x <
-                     3101][0]
+            p_ind = [x for x in np.argwhere(med == peak) if 3000 < x < 3101][0]
 
         elif type_ == 'lfp':
             ti = lfp_index(3000)
@@ -630,6 +637,9 @@ def p_to_p(ctrl, nn, cbase, nbase, ind):
     """
     :param ctrl: data array of congrol
     :param nn:  data array of notched noise
+    :param cbase: I don't know
+    :param nbaseL I don't know
+    :param ind: I don't know
     :return: difference ratio to ctrl
     """
     pc = np.abs(ctrl[ind] - cbase[ind])
@@ -649,8 +659,10 @@ def p_to_p(ctrl, nn, cbase, nbase, ind):
     return diff_
 
 
-def diff(data, layer, lv, cn, cs, ind=None, bdata=None, types='spk',
-         fqtype='center'):
+def diff(
+        data, layer, lv, cn, cs, ind=None,
+        bdata=None, types='spk', fqtype='center'
+        ):
     """
 
     :param data: frequency profile data
@@ -714,8 +726,10 @@ def diff(data, layer, lv, cn, cs, ind=None, bdata=None, types='spk',
                 tembc = bdata[cs][layer][lv]
                 tembn = bdata[cn][layer][lv]
                 tempr.append(
-                    p_to_p(tempc[ani], tempn[ani], tembc[ani],
-                           tembn[ani], fm[ani])
+                    p_to_p(
+                        tempc[ani], tempn[ani], tembc[ani],
+                        tembn[ani], fm[ani]
+                        )
                     )
         else:
             print("you forgot to indicate which kind of data it is")
@@ -772,8 +786,10 @@ def diff_on_off(data, layer, lv, cn, cs, cnon, bdata=None, types='spk'):
             tembc = bdata[cs][layer][lv]
             tembn = bdata[cn][layer][lv]
             tempr.append(
-                p_to_p(tempc[ani], tempn[ani], tembc[ani],
-                       tembn[ani], fm[ani])
+                p_to_p(
+                    tempc[ani], tempn[ani], tembc[ani],
+                    tembn[ani], fm[ani]
+                    )
                 )
     else:
         print("you forgot to indicate which kind of data it is")
@@ -901,7 +917,6 @@ def nn_csd(data):
     coord = np.arange(0, 1501, 100) * pq.micrometer
     sigma = 1 / (100 * pq.micrometer)
     data = data * pq.mV
-    lfp_data = neo.core.AnalogSignal(data.T, sampling_rate=sr_lfp)
 
     lfp_input = {
         'lfp': lfp_data,

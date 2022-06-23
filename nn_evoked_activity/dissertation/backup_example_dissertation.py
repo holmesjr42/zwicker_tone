@@ -1,4 +1,4 @@
-import os
+# import os
 import sys
 import pathlib
 
@@ -8,9 +8,9 @@ sys.path.insert(1, str(tool_path))
 
 import numpy as np
 import matplotlib.pyplot as plt
-from parameter import parameters as pm
+from nn_tool.parameter import parameters as pm
 import h5py
-from tools import nnm_plot as nnmp
+from nn_tool.tools import nnm_plot as nnmp
 import pylustrator
 import quantities as pq
 
@@ -27,7 +27,7 @@ nns = pm.Nnsifeat
 com = pm.Commonfeat
 
 # some setups for plotting e.g. color scheme
-val = pm.Setup(cond='nnm_3_0', cond2='tsp', mode=1)
+val = pm.Setup(mode=1)
 mode, ylc, condc, condt, nb, ch, depth, dcmap, ws, hs, rt, cct, cb, ccmap = \
     val.values()
 lvl = com.db['lv']  # SPLdB list
