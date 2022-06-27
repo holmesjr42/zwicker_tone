@@ -1,14 +1,19 @@
 import os
 import sys
-
-sys.path.insert(1, os.path.dirname(os.path.dirname(os.getcwd())) + "/nn_tool")
+import pathlib
+import h5py
 
 import numpy as np
+
 import matplotlib.pyplot as plt
-from parameter import parameters as pm
-import h5py
 import pylustrator
-from tools import nn_tool as nt
+
+# add path to the tool directory to sys.path
+tool_path = pathlib.Path(__file__).parents[2] / "nn_tool"
+sys.path.insert(1, str(tool_path))
+
+from nn_tool.tools import nn_tools as nt
+from nn_tool.parameter import parameters as pm
 
 pylustrator.start()
 sys.path.pop(1)
@@ -24,31 +29,36 @@ nnc = pm.Nnmcontfeat
 nns = pm.Nnsifeat
 com = pm.Commonfeat
 
-# some setups for plotting e.g. color scheme
-val = pm.Setup(cond='nnm_3_0', cond2='tsp', mode=1)
-mode, ylc, condc, condt, nb, ch, depth, dcmap, ws, hs, rt, cct, cb, ccmap = \
-    val.values()
-lvl = com.db['lv']  # SPLdB list
-sets = val.extra_setup()
 
-file_input = '/home/bhc/OneDrive/Work/PhD/projects/zwicker_tone_2018_2021' \
-             '/data/dataset/fp_layer/fp_layer_nnm_3_0.hdf5'
-# file_input = snakemake.input[0]
+val = pm.Setup(hcmap_mode='spk', mode='fun')
+# mode, ylc, condc, condt, nb, ch, depth, dcmap, ws, hs, rt, cct, cb, ccmap = \
+#     val.values()
+lvl = com.db['lv']  # SPLdB list
+
+# load data
+data_path = 'OneDrive\\Work\\PhD\\projects\\zwicker_tone_2018_2021' \
+            '\\data\\dataset\\fp_layer'
+file_name = 'fp_layer_nnm_3_0.hdf5'
+
+partition = pm.data_path_selection()
+
+file_input = os.path.join(partition, data_path, file_name)
+
 
 # stimulus conditions for this script
-cn = sets[7][0]
-cs = sets[8][0]
+cn = val.c_n[0]
+cs = val.c_s[0]
 
 # layer name list and dic key list of layers
 # layer_name = sets[0]
 layer_name = ['Supragranular layer', 'Granular layer', 'Infragranular layer']
-l_list = sets[2]
+l_list = val.l_list
 
 # index list of low edge, high edge
-finx = [sets[3][1], sets[3][3]]
+finx = [val.freq[1], val.freq[3]]
 
 # line style for plots
-l_style = sets[5]
+l_style = val.l_style
 
 # dic for difference ratio and quartile 25/75
 ratio = {'spk': {}, 'lfp': {}}
@@ -91,14 +101,14 @@ for i in range(len(r_list)):
     for j in range(len(l_list)):
         lname = layer_name[j]
         s_axs[i].plot(
-            xs, data[l_list[j]][0], color=dcmap[maps[j]],
+            xs, data[l_list[j]][0], color='k',
             label=lname, lw=5, linestyle=l_style[j], zorder=2
             )
 
         s_axs[i].fill_between(xs,
                               data[l_list[j]][1],
                               data[l_list[j]][2],
-                              color=dcmap[maps[j]], zorder=1, alpha=0.1)
+                              color='k', zorder=1, alpha=0.1)
 
     s_axs[i].set_yticks(np.arange(yticks[i][0], yticks[i][1], yticks[i][2]))
     s_axs[i].set_ylim(ylims[i][0], ylims[i][1])

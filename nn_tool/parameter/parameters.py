@@ -117,8 +117,9 @@ nn on-off
 class Nnsifeat:
     # timed index for multi-tone pip trigger
 
-    with open(param_path + '/time_index_multi_tones_500ms_180s_nn_si.pk',
-              'rb') as pip:
+    with open(
+            param_path + '/time_index_multi_tones_500ms_180s_nn_si.pk', 'rb'
+            ) as pip:
         p_infos = pickle.load(pip)
 
     p_info31 = {'nn': p_infos['t_index_31_nn'], 'si': p_infos['t_index_31_si']}
@@ -445,7 +446,7 @@ class Setup:
 
 class Nn:
 
-    def __init(self):
+    def __init__(self):
         ind_3_1 = [
             np.arange(0, 180000 - 4000 + 1, 4000),
             np.arange(4000, 180000 + 1, 4000)
@@ -476,3 +477,4 @@ class Nn:
 if __name__ == "__main__":
     st = Setup()
     print(st.depth)
+

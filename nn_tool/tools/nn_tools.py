@@ -13,7 +13,7 @@ sys.path.insert(1, str(tool_path))
 
 # import spike_tools as st
 from nn_tool.parameter import parameters as pm
-import icsd
+from nn_tool.tools import icsd
 import neo.core
 
 sys.path.pop(1)
@@ -534,34 +534,6 @@ def setups(cond):
     return names, tmax, nn_title, wn_title
 
 
-def freq_find(data, find, type_='spk'):
-    """
-
-    :param data: frequency profile type data
-    :param find: index for edges of notch frequencies
-    :param type_: spk/lfp
-    :return: max activity freq index within notch
-    """
-    fi = find[0]
-    ff = find[1] + 1
-
-    if type_ == 'spk':
-        d_max = np.max(data[fi:ff])
-        ind = [i for i, x in enumerate(data) if x == d_max and fi <= i < ff][0]
-
-    elif type_ == 'lfp':
-        d_min = np.min(data[fi:ff])
-        ind = [i for i, x in enumerate(data) if x == d_min and fi <= i < ff][0]
-
-    else:
-        print(
-            "you did not choose the data type. Choose either 'spk' or 'lfp'."
-            )
-        raise ValueError
-
-    return ind
-
-
 def layer_mean(data, layer, type_='spk', cond_='3_1'):
     """
     Actually, this returns quartile and median of input data.
@@ -633,6 +605,34 @@ def layer_mean(data, layer, type_='spk', cond_='3_1'):
     return [quar2[p_ind], quar7[p_ind]], peak, p_ind
 
 
+def freq_find(data, find, type_='spk'):
+    """
+
+    :param data: frequency profile type data
+    :param find: index for edges of notch frequencies
+    :param type_: spk/lfp
+    :return: max activity freq index within notch
+    """
+    fi = find[0]
+    ff = find[1] + 1
+
+    if type_ == 'spk':
+        d_max = np.max(data[fi:ff])
+        ind = [i for i, x in enumerate(data) if x == d_max and fi <= i < ff][0]
+
+    elif type_ == 'lfp':
+        d_min = np.min(data[fi:ff])
+        ind = [i for i, x in enumerate(data) if x == d_min and fi <= i < ff][0]
+
+    else:
+        print(
+            "you did not choose the data type. Choose either 'spk' or 'lfp'."
+            )
+        raise ValueError
+
+    return ind
+
+
 def p_to_p(ctrl, nn, cbase, nbase, ind):
     """
     :param ctrl: data array of congrol
@@ -642,8 +642,8 @@ def p_to_p(ctrl, nn, cbase, nbase, ind):
     :param ind: I don't know
     :return: difference ratio to ctrl
     """
-    pc = np.abs(ctrl[ind] - cbase[ind])
-    pn = np.abs(nn[ind] - nbase[ind])
+    pc = ctrl[ind] - cbase[ind]
+    pn = nn[ind] - nbase[ind]
 
     diff_ = (pn - pc) / pc
     # if ctrl[ind] != np.max(ctrl):
@@ -676,6 +676,7 @@ def diff(
     :param fqtype: type of the frequency of interest: 'edge', 'center'
     :return: median value of that specific layer, level, frequecny
     """
+
     tempc = data[cs][layer][lv]
     tempn = data[cn][layer][lv]
 
@@ -710,7 +711,7 @@ def diff(
         fm = []
         if types == 'spk':
             for ani in range(len(tempn)):
-                fm.append(freq_find(tempn[ani], find))
+                fm.append(freq_find(tempn[ani], find, type_='spk'))
 
             for ani in range(len(tempn)):
                 tempr.append(
@@ -720,7 +721,7 @@ def diff(
 
         elif types == 'lfp':
             for ani in range(len(tempn)):
-                fm.append(freq_find(tempn[ani], find))
+                fm.append(freq_find(tempn[ani], find, type_='lfp'))
 
             for ani in range(len(tempn)):
                 tembc = bdata[cs][layer][lv]
@@ -919,7 +920,7 @@ def nn_csd(data):
     data = data * pq.mV
 
     lfp_input = {
-        'lfp': lfp_data,
+        'lfp': data,
         'coord_electrode': coord,
         'sigma': sigma,
         'f_type': 'gaussian',
